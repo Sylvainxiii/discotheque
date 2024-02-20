@@ -1,3 +1,5 @@
+<!-- encore un test pour github -->
+
 <?php
 include('includes/header.php');
 
@@ -42,6 +44,9 @@ $img = $result['uti_avatar'];
     </form>
     <img src="data:image/jpeg;base64,<?= $img ?>" alt="">
 
+    <div>
+        <span>Une div qui sert à rien juste pour exemple</span>
+    </div>
 </body>
 
 </html>
