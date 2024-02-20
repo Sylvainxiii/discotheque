@@ -1,3 +1,4 @@
+<!-- Un commenteire quelconque -->
 <?php
 include("includes/header.php");
 
