@@ -1,5 +1,7 @@
 <?php
 
+//voici un commentaire pour tester github
+
 //FONCTIONS RELATIVES A L'UTILISATEUR
 
 // Vérifie la connection (password et email)
