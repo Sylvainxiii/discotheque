@@ -55,6 +55,9 @@
     --option-bg: white;
     --select-bg: rgba(255, 255, 255, 0.2);
 
+    --btn-font-size: 0.7em;
+    --btn-media-font-size: calc(0.4em + 0.6vw);
+
 }
 
 .btn-primary {
@@ -350,9 +353,10 @@ fieldset {
 /* bouton ------------------------------------------------------------------------------------------------------------------------------------------------------------ */
 .btn {
 
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
     padding: 5px 5px;
-    font-size: 0.7em;
+    font-size: var(--btn-font-size);
     color: var(--bs-btn-color);
     text-align: center;
     text-decoration: none;
@@ -364,8 +368,10 @@ fieldset {
     background: var(--bs-btn-bg);
     box-shadow: var(--bs-btn-shadow);
     height: 30px;
+    width: fit-content;
     margin-top: 0;
     text-wrap: nowrap;
+    justify-content: center;
 
 }
 
@@ -384,7 +390,7 @@ fieldset {
 
 .btn a {
     color: var(--bs-btn-color);
-    vertical-align: middle;
+    line-height: var(--btn-font-size);
 }
 
 .btn-td {
@@ -566,7 +572,11 @@ img {
 
     td,
     .btn {
-        font-size: calc(0.4em + 0.6vw);
+        font-size: var(--btn-media-font-size);
+    }
+
+    .btn a {
+        line-height: var(--btn-media-font-size);
     }
 
     .hide {
