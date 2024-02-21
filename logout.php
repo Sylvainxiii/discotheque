@@ -1,4 +1,3 @@
-<!-- un commentaire -->
 <?php
 session_start();
 
