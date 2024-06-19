@@ -10,7 +10,7 @@ $data = versionDetail($_GET['versionId'], $pdo);
 
 if (isset($_POST["formatId"])) {
     editVersion($_GET['versionId'], $pdo);
-    header("location: liste.php");
+    header("location: index.php");
 }
 
 ?>

@@ -13,14 +13,17 @@ $list = getListe($_SESSION["email"], $pdo);
 
 if (isset($_GET['listeId'])) {
     editetat($pdo);
-    header("location: liste.php");
+    header("location: index.php");
 }
 
 if (isset($_GET['delete'])) {
     supListe($_GET['delete'], $pdo);
-    header("location: liste.php");
+    header("location: index.php");
 }
 
+echo('<pre>');
+var_dump($_SERVER);
+echo('<pre>');
 ?>
 
 <body>
@@ -62,7 +65,7 @@ if (isset($_GET['delete'])) {
                             <td><?= $list[$i]['art_nom'] ?></td>
                             <td class="hide"><?= $list[$i]['for_nom'] ?></td>
                             <td class="hide"><?= $list[$i]['gen_nom'] ?></td>
-                            <form action="liste.php" method="get">
+                            <form action="index.php" method="get">
                                 <input type="hidden" name="listeId" id="listeId" value=<?= $list[$i]['lis_id'] ?>>
                                 <td class="etat-td form-etat-pc">
                                     <div class="select-etat"><?= menuSelect("Média", "etatMedia", "d_etat_eta", $pdo, $list[$i]['lis_fk_media_eta_id']) ?></div>
@@ -71,13 +74,13 @@ if (isset($_GET['delete'])) {
                                 <td class="btn-td form-etat-pc"><button type="submit" class="btn btn-primary">Modifier l'état</button></td>
                             </form>
                             <td class="btn-td form-etat-pc">
-                                <div class="btn btn-danger"><a href="liste.php?delete=<?= $list[$i]['lis_id'] ?>">Supprimer</a></div>
+                                <div class="btn btn-danger"><a href="index.php?delete=<?= $list[$i]['lis_id'] ?>">Supprimer</a></div>
                             </td>
                         </tr>
                         <tr class="form-etat-mobile">
 
                             <th scope="row" class="th-center th-row"></th>
-                            <form action="liste.php" method="get">
+                            <form action="index.php" method="get">
                                 <input type="hidden" name="listeId" id="listeId" value=<?= $list[$i]['lis_id'] ?>>
                                 <td colspan="2">
                                     <div class="flex-row">
@@ -90,7 +93,7 @@ if (isset($_GET['delete'])) {
                                 </td>
                             </form>
                             <td class="btn-td">
-                                <div class="btn btn-danger"><a href="liste.php?delete=<?= $list[$i]['lis_id'] ?>">Supprimer</a></div>
+                                <div class="btn btn-danger"><a href="index.php?delete=<?= $list[$i]['lis_id'] ?>">Supprimer</a></div>
                             </td>
                         </tr>
 

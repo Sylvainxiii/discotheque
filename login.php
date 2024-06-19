@@ -6,7 +6,7 @@ include("includes/header.php");
 if (count($_POST) > 0) {
     if (isValid($_POST['email'], $_POST['password'], $pdo)) {
         $_SESSION['email'] = $_POST['email'];
-        header('Location: liste.php');
+        header('Location: index.php');
     } else {
         header('Location: utilisateur_add.php');
     }

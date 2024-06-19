@@ -50,7 +50,7 @@ if (isset($_GET["versionId"])) {
     $user =  userId($email, $pdo);
 
     addToList($user["uti_id"], $_GET['versionId'], $pdo);
-    header('Location: liste.php');
+    header('Location: index.php');
 }
 
 ?>

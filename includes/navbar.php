@@ -1,6 +1,6 @@
 <?php
 if (isset($_SESSION["email"])) {
-    $home = "liste.php";
+    $home = "index.php";
     $log = "Logout";
     $logref = "logout.php";
     $avatar = userInfo($_SESSION['email'], $pdo);
