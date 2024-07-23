@@ -58,7 +58,7 @@ if (isset($_GET['delete'])) {
                                 <img src="<?= $list[$i]['ver_image'] ?>" alt="pochette de l'album" class="img-liste">
                             </td>
                             <td><?= $list[$i]['ver_ref'] ?></td>
-                            <td><a href="version_detail.php?versionId=<?= $list[$i]['ver_id'] ?>"><?= $list[$i]['alb_titre'] ?></a></td>
+                            <td><a href="version_album.php?versionId=<?= $list[$i]['ver_id'] ?>"><?= $list[$i]['alb_titre'] ?></a></td>
                             <td><?= $list[$i]['art_nom'] ?></td>
                             <td class="hide"><?= $list[$i]['for_nom'] ?></td>
                             <td class="hide"><?= $list[$i]['gen_nom'] ?></td>

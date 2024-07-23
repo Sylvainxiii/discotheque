@@ -1,17 +1,17 @@
 <?php
 include("src/__header.php");
+
 if (!isset($_SESSION['email'])) {
     header('Location: login.php');
 }
 
 if (isset($_GET['versionId'])) {
     $data = versionDetail($_GET['versionId'], $pdo);
-    $tracklist = getChanson($_GET['versionId'], $pdo);
 }
 
 if (isset($_GET['delete'])) {
     supChanson($_GET['delete'], $pdo);
-    header("location: version_detail.php?versionId=" . $_GET['versionId']);
+    header("location: version_album.php?versionId=" . $_GET['versionId']);
 }
 ?>
 
@@ -23,6 +23,7 @@ if (isset($_GET['delete'])) {
     <div class="container">
         <h1>Album: <?= $data['alb_titre'] ?> par <?= $data['art_nom'] ?></h1>
         <div class="text-center">
+            <input type="hidden" id="versionId" value=<?= $_GET['versionId'] ?>>
             <img src="<?= $data['ver_image'] ?>" alt="pochette de l'album" class="img-detail">
             <table class="table">
                 <tbody>
@@ -74,34 +75,13 @@ if (isset($_GET['delete'])) {
                     <th scope="col" class="th-left"></th>
                 </tr>
             </thead>
-            <tbody>
-                <?php
-                for ($i = 0; $i < count($tracklist); $i++) {
-                ?>
-                    <tr>
-                        <th scope="row"><?= $tracklist[$i]['cha_track'] ?></th>
-                        <td><?= $tracklist[$i]['cha_titre'] ?></td>
-                        <td><?= $tracklist[$i]['cha_duree'] ?></td>
-                        <td class="btn-td">
-                            <div class="btn btn-primary"><a href="chanson_edit.php?chansonId=<?= $tracklist[$i]['cha_id'] ?>">Editer la chanson</a></div>
-                        </td>
-                        <td class="btn-td">
-                            <div class="btn btn-danger"><a href="version_detail.php?versionId=<?= $_GET['versionId'] ?>&delete=<?= $tracklist[$i]['cha_id'] ?>">Supprimer la chanson</a></div>
-                        </td>
-                    </tr>
-                <?php
-                }
-                ?>
+            <tbody id="liste-chansons">
 
-                <tr>
-                    <td colspan="5">
-                        <div class="btn btn-primary"><a href="chanson_creation.php?versionId=<?= $_GET['versionId'] ?>">Ajouter des chansons</a></div>
-                    </td>
-                </tr>
             </tbody>
         </table>
     </div>
 
 </body>
+<script src="/assets/js/album_version.js"></script>
 
 </html>

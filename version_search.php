@@ -104,7 +104,7 @@ if (isset($_GET["versionId"])) {
                     ?>
                         <tr>
                             <th scope="row"><?= ($i + 1) ?></th>
-                            <td><a href="version_detail.php?versionId=<?= $data[$i]['ver_id'] ?>"><?= $data[$i]['ver_ref'] ?></a></td>
+                            <td><a href="version_album.php?versionId=<?= $data[$i]['ver_id'] ?>"><?= $data[$i]['ver_ref'] ?></a></td>
                             <td><?= $data[$i]['alb_titre'] ?></td>
                             <td><?= $data[$i]['art_nom'] ?></td>
                             <td><?= $data[$i]['ver_press_annee'] ?></td>

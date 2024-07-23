@@ -1,20 +1,23 @@
 <?php
 
-include("src/__function.php");
+include("__function.php");
+include_once("dbconnect.php");
+$request_method = $_SERVER["REQUEST_METHOD"];
+$pdo = dbconnect();
 
 switch ($request_method) {
     case 'GET':
         $id = intval($_GET["id"]);
-        getProduct($pdo, $id);
+        getChansons($id, $pdo);
         break;
     case 'DELETE':
         $id = intval($_GET["id"]);
-        deleteProduct($pdo, $id);
+        supChanson($pdo, $id);
         break;
     case 'POST':
-        addProduct($pdo);
+        createChanson($pdo);
         break;
     case 'PUT':
-        editProduct($pdo);
+        editchanson($id, $pdo);
         break;
 }

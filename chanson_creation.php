@@ -8,7 +8,7 @@ if (!isset($_SESSION['email'])) {
 
 if (isset($_POST['0titre'])) {
     createChanson($pdo);
-    header("location: version_detail.php?versionId=" . $_POST['versionId']);
+    header("location: version_album.php?versionId=" . $_POST['versionId']);
 }
 
 ?>

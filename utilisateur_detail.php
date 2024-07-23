@@ -11,7 +11,7 @@ if (isset($_SESSION['email'])) {
 
 // if (isset($_GET['delete'])) {
 //     supChanson($_GET['delete'], $pdo);
-//     header("location: version_detail.php?versionId=" . $_GET['versionId']);
+//     header("location: version_album.php?versionId=" . $_GET['versionId']);
 // }
 ?>
 

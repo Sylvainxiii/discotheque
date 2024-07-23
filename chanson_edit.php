@@ -10,7 +10,7 @@ $data = chansonDetail($_GET['chansonId'], $pdo);
 
 if (isset($_POST["chansonTitre"])) {
     editchanson($_GET['chansonId'], $pdo);
-    header("location: version_detail.php?versionId=" . $_POST['versionId']);
+    header("location: version_album.php?versionId=" . $_POST['versionId']);
 }
 
 ?>

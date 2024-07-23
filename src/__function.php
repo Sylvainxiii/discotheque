@@ -1,6 +1,8 @@
 <?php
 include_once("dbconnect.php");
 
+$pdo = dbconnect();
+
 // FUNCTION MENU ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Menu select avec taille auto, peut être déployé n'importe ou
@@ -317,14 +319,15 @@ function supVersion($versionid, $pdo)
 // FUNCTION CHANSON ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //Fonction pour récupérer la liste des chanson relative à un album
-function getChanson($versionid, $pdo)
+function getChansons($versionId, $pdo)
 {
     $sql = "SELECT * FROM d_chanson_cha WHERE cha_fk_ver_id = :versionid ORDER BY cha_track ASC";
     $stmt = $pdo->prepare($sql);
-    $params = ["versionid" => $versionid];
+    $params = ["versionid" => $versionId];
     $stmt->execute($params);
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return $result;
+    header("Content-Type: application/json");
+    echo json_encode($result, JSON_PRETTY_PRINT);
 }
 
 //Fonction pour récupérer le détail d'une chanson relative à un album
