@@ -1,5 +1,5 @@
 <?php
-include("includes/header.php");
+include("src/__header.php");
 if (!isset($_SESSION['email'])) {
     header('Location: login.php');
 }
@@ -17,7 +17,7 @@ if (isset($_GET['delete'])) {
 
 <body>
     <?php
-    include("includes/navbar.php")
+    include("src/__navbar.php")
     ?>
 
     <div class="container">

@@ -1,6 +1,6 @@
 <!-- Un commenteire quelconque -->
 <?php
-include("includes/header.php");
+include("src/__header.php");
 
 
 if (count($_POST) > 0) {
