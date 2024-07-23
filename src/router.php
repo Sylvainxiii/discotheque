@@ -7,12 +7,12 @@ $pdo = dbconnect();
 
 switch ($request_method) {
     case 'GET':
-        $id = intval($_GET["id"]);
+        $id = intval($_GET["idVersion"]);
         getChansons($id, $pdo);
         break;
     case 'DELETE':
-        $id = intval($_GET["id"]);
-        supChanson($pdo, $id);
+        $id = intval($_GET["idChanson"]);
+        deleteChanson($id, $pdo);
         break;
     case 'POST':
         createChanson($pdo);

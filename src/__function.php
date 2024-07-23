@@ -319,11 +319,11 @@ function supVersion($versionid, $pdo)
 // FUNCTION CHANSON ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //Fonction pour récupérer la liste des chanson relative à un album
-function getChansons($versionId, $pdo)
+function getChansons($idVersion, $pdo)
 {
-    $sql = "SELECT * FROM d_chanson_cha WHERE cha_fk_ver_id = :versionid ORDER BY cha_track ASC";
+    $sql = "SELECT * FROM d_chanson_cha WHERE cha_fk_ver_id = :idversion ORDER BY cha_track ASC";
     $stmt = $pdo->prepare($sql);
-    $params = ["versionid" => $versionId];
+    $params = ["idversion" => $idVersion];
     $stmt->execute($params);
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     header("Content-Type: application/json");
@@ -355,7 +355,7 @@ function createChanson($pdo)
 }
 
 //Edition d'une chanson
-function editchanson($chansonid, $pdo)
+function editchanson($idChanson, $pdo)
 {
     $sql = "UPDATE d_chanson_cha SET cha_titre = :chansonTitre, cha_fk_ver_id = :versionId, cha_duree = :chansonDuree, cha_track = :chansonTrackNr
     WHERE cha_id = :chansonId";
@@ -366,11 +366,11 @@ function editchanson($chansonid, $pdo)
 }
 
 // Suppression d'une chanson
-function supChanson($chansonid, $pdo)
+function deleteChanson($idChanson, $pdo)
 {
-    $sql = "DELETE FROM d_chanson_cha WHERE cha_id = :chansonId";
+    $sql = "DELETE FROM d_chanson_cha WHERE cha_id = :idchanson";
     $stmt = $pdo->prepare($sql);
-    $params = ["chansonId" => $chansonid];
+    $params = ["idchanson" => $idChanson];
     $stmt->execute($params);
     return;
 }

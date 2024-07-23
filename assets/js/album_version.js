@@ -1,10 +1,10 @@
 
-let versionId = document.getElementById("versionId").value;
+let idVersion = document.getElementById("idVersion").value;
 let listeChansons = document.getElementById("liste-chansons");
 
-function getChansons(versionId) {
+function getChansons(idVersion) {
     listeChansons.innerHTML = "";
-    let url = "http://discotheque.test/src/router.php?id=" + versionId;
+    let url = "http://discotheque.test/src/router.php?idVersion=" + idVersion;
 
     fetch(url, { method: 'GET' })
         .then(response => response.json())
@@ -20,7 +20,8 @@ function getChansons(versionId) {
                 colonneTable = [titre, duree];
 
                 let ligne = document.createElement('tr');
-                ligne.id = track;
+                ligne.id = id;
+                ligne.className = "chanson";
 
                 // Entête deligne avec le numéro de track
                 let ligneTrack = document.createElement('th');
@@ -62,4 +63,28 @@ function getChansons(versionId) {
         })
 }
 
-document.onload = getChansons(versionId);
+function deleteChanson(idChanson) {
+    let url = "http://discotheque.test/src/router.php?idChanson=" + idChanson;
+    fetch(url, { method: 'DELETE' })
+        .then(() => {
+            alert("suppression ok");
+            getChansons(idVersion);
+        })
+        .catch((error) => {
+            if (error) {
+                alert('error');
+                return;
+            }
+            return;
+        })
+}
+
+document.onload = getChansons(idVersion);
+
+document.addEventListener('click', function (event) {
+    let el = event.target;
+    if (el.className == "btn btn-danger") {
+        idChanson = el.parentNode.parentNode.id;
+        deleteChanson(idChanson);
+    }
+})

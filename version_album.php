@@ -23,7 +23,7 @@ if (isset($_GET['delete'])) {
     <div class="container">
         <h1>Album: <?= $data['alb_titre'] ?> par <?= $data['art_nom'] ?></h1>
         <div class="text-center">
-            <input type="hidden" id="versionId" value=<?= $_GET['versionId'] ?>>
+            <input type="hidden" id="idVersion" value=<?= $_GET['versionId'] ?>>
             <img src="<?= $data['ver_image'] ?>" alt="pochette de l'album" class="img-detail">
             <table class="table">
                 <tbody>
@@ -76,9 +76,11 @@ if (isset($_GET['delete'])) {
                 </tr>
             </thead>
             <tbody id="liste-chansons">
-
             </tbody>
         </table>
+        <div>
+            <div class="btn btn-primary"><a href="chanson_creation.php?versionId=<?= $_GET['versionId'] ?>">Ajouter des chansons</a></div>
+        </div>
     </div>
 
 </body>
