@@ -1,6 +1,8 @@
-
 let idVersion = document.getElementById("idVersion").value;
 let listeChansons = document.getElementById("liste-chansons");
+let modale = document.getElementById("modale-chanson");
+let closeModale = document.getElementById("close-modale");
+let defineNChanson = document.getElementById("nChanson");
 
 function getChansons(idVersion) {
     listeChansons.innerHTML = "";
@@ -41,12 +43,12 @@ function getChansons(idVersion) {
 
                 let boutonEditChanson = document.createElement('td')
                 boutonEditChanson.className = "btn-td"
-                boutonEditChanson.innerHTML = '<div class="btn btn-primary">Editer la chanson</div>'
+                boutonEditChanson.innerHTML = '<div class="btn btn-primary edit-chanson">Editer la chanson</div>'
                 ligne.appendChild(boutonEditChanson);
 
                 let boutonDeleteChanson = document.createElement('td');
                 boutonDeleteChanson.className = "btn-td";
-                boutonDeleteChanson.innerHTML = '<div class="btn btn-danger">Supprimer la chanson</div>'
+                boutonDeleteChanson.innerHTML = '<div class="btn btn-danger delete-chanson">Supprimer la chanson</div>'
                 ligne.appendChild(boutonDeleteChanson);
 
                 listeChansons.appendChild(ligne);
@@ -79,12 +81,45 @@ function deleteChanson(idChanson) {
         })
 }
 
+function addChanson(idVersion) {
+
+
+
+}
+
+function tailleFormulaireModale() {
+    let nChanson = defineNChanson.value;
+    let modaleListeChanson = document.getElementById("modale-liste-chanson");
+    modaleListeChanson.innerHTML = "";
+
+    for (i = 0; i < nChanson; i = i + 1) {
+        ligne = document.createElement('tr')
+        ligne.id = ("newtrack" + i);
+        ligne.innerHTML = "<td><input required type='text' class='form-control' id='track" + i +
+            "'></td><td><input required type='text' class='form-control'  id='titre" + i +
+            "'></td><td><input type='text' class='form-control' id='duree" + i +
+            "'></td>"
+        modaleListeChanson.appendChild(ligne);
+    }
+}
+
 document.onload = getChansons(idVersion);
 
 document.addEventListener('click', function (event) {
     let el = event.target;
-    if (el.className == "btn btn-danger") {
+    if (el.classList.contains("delete-chanson")) {
         idChanson = el.parentNode.parentNode.id;
         deleteChanson(idChanson);
     }
+
+    if (el.classList.contains("add-chanson")) {
+        tailleFormulaireModale();
+        modale.classList.remove("hidden");
+    }
 })
+
+closeModale.addEventListener('click', function () {
+    modale.classList.add("hidden");
+})
+
+defineNChanson.addEventListener('change', function () { tailleFormulaireModale() });

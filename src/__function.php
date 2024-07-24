@@ -360,7 +360,7 @@ function editchanson($idChanson, $pdo)
     $sql = "UPDATE d_chanson_cha SET cha_titre = :chansonTitre, cha_fk_ver_id = :versionId, cha_duree = :chansonDuree, cha_track = :chansonTrackNr
     WHERE cha_id = :chansonId";
     $stmt = $pdo->prepare($sql);
-    $params = ["chansonId" => $chansonid, "chansonTitre" => $_POST["chansonTitre"], "versionId" => $_POST["versionId"], "chansonDuree" => $_POST["chansonDuree"], "chansonTrackNr" => $_POST["chansonTrackNr"]];
+    $params = ["chansonId" => $idChanson, "chansonTitre" => $_POST["chansonTitre"], "versionId" => $_POST["versionId"], "chansonDuree" => $_POST["chansonDuree"], "chansonTrackNr" => $_POST["chansonTrackNr"]];
     $stmt->execute($params);
     return;
 }

@@ -9,10 +9,6 @@ if (isset($_GET['versionId'])) {
     $data = versionDetail($_GET['versionId'], $pdo);
 }
 
-if (isset($_GET['delete'])) {
-    supChanson($_GET['delete'], $pdo);
-    header("location: version_album.php?versionId=" . $_GET['versionId']);
-}
 ?>
 
 <body>
@@ -79,8 +75,33 @@ if (isset($_GET['delete'])) {
             </tbody>
         </table>
         <div>
-            <div class="btn btn-primary"><a href="chanson_creation.php?versionId=<?= $_GET['versionId'] ?>">Ajouter des chansons</a></div>
+            <div class="btn btn-primary add-chanson">Ajouter des chansons</a></div>
         </div>
+    </div>
+
+    <div class="modale hidden" id="modale-chanson">
+        <div class="close-btn" id="close-modale">X</div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col"> <label class="form-label">Track Nr</label>
+                    </th>
+                    <th scope="col"> <label class="form-label">Titre de la chanson</label>
+                    </th>
+                    <th scope="col"> <label class="form-label">Durée</label>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="modale-liste-chanson">
+            </tbody>
+        </table>
+        <div class="btn btn-primary">Créer</div>
+
+        <div>
+            <label for="nChanson" class="form-label">Nr de Chansons</label>
+            <input type="number" class="form-control form-control-color" id="nChanson" value="1">
+        </div>
+
     </div>
 
 </body>
