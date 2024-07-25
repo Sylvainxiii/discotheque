@@ -356,13 +356,16 @@ function addChanson($pdo)
 }
 
 //Edition d'une chanson
-function editchanson($idChanson, $pdo)
+function editchanson($pdo)
 {
-    $sql = "UPDATE d_chanson_cha SET cha_titre = :chansonTitre, cha_fk_ver_id = :versionId, cha_duree = :chansonDuree, cha_track = :chansonTrackNr
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    $sql = "UPDATE d_chanson_cha SET cha_titre = :chansonTitre, cha_fk_ver_id = :idVersion, cha_duree = :chansonDuree, cha_track = :chansonTrackNr
     WHERE cha_id = :chansonId";
     $stmt = $pdo->prepare($sql);
-    $params = ["chansonId" => $idChanson, "chansonTitre" => $_POST["chansonTitre"], "versionId" => $_POST["versionId"], "chansonDuree" => $_POST["chansonDuree"], "chansonTrackNr" => $_POST["chansonTrackNr"]];
+    $params = ["chansonId" => $data["idChanson"], "chansonTitre" => $data["titre"], "idVersion" => $data["idVersion"], "chansonDuree" => $data["duree"], "chansonTrackNr" => $data["track"]];
     $stmt->execute($params);
+
     return;
 }
 

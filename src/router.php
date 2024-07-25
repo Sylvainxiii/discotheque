@@ -18,6 +18,6 @@ switch ($request_method) {
         addChanson($pdo);
         break;
     case 'PUT':
-        editchanson($id, $pdo);
+        editchanson($pdo);
         break;
 }

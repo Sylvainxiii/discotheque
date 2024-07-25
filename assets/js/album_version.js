@@ -2,7 +2,9 @@ let idVersion = document.getElementById("idVersion").value;
 let listeChansons = document.getElementById("liste-chansons");
 let modale = document.getElementById("modale-chanson");
 let closeModale = document.getElementById("close-modale");
+let nombreChanson = document.getElementById('nombre-chansons');
 let defineNChanson = document.getElementById("nChanson");
+let addChansonBtn = document.getElementById("add-chanson-btn");
 
 function getChansons(idVersion) {
     listeChansons.innerHTML = "";
@@ -69,7 +71,6 @@ function deleteChanson(idChanson) {
     let url = "http://discotheque.test/src/router.php?idChanson=" + idChanson;
     fetch(url, { method: 'DELETE' })
         .then(() => {
-            alert("suppression ok");
             getChansons(idVersion);
         })
         .catch((error) => {
@@ -79,12 +80,13 @@ function deleteChanson(idChanson) {
             }
             return;
         })
+    alert("suppression ok");
+    return;
 }
 
 function addChanson(idVersion) {
     let addedChansons = document.getElementsByClassName("newtrack");
     let url = "http://discotheque.test/src/router.php";
-    debugger
     for (i = 0; i < addedChansons.length; i = i + 1) {
         let nouvelleChanson = addedChansons.item(i);
         let trackNouvelleChanson = nouvelleChanson.firstChild.firstChild.value;
@@ -104,6 +106,7 @@ function addChanson(idVersion) {
             }
         })
             .then(() => {
+                getChansons(idVersion);
             })
             .catch((error) => {
                 if (error) {
@@ -113,10 +116,43 @@ function addChanson(idVersion) {
                 return;
             })
     }
-    getChansons(idVersion);
-    modale.classList.add("hidden");
+    resetModaleChanson()
+
+    return;
 }
 
+function editChanson(idChanson) {
+    let url = "http://discotheque.test/src/router.php";
+    let trackEditChanson = document.getElementById('track0').value;
+    let titreEditChanson = document.getElementById('titre0').value;
+    let dureeEditChanson = document.getElementById('duree0').value;
+    fetch(url, {
+        method: 'PUT',
+        body: JSON.stringify({
+            "idVersion": idVersion,
+            "idChanson": idChanson,
+            "titre": titreEditChanson,
+            "duree": dureeEditChanson,
+            "track": trackEditChanson
+        }),
+        headers: {
+            "Content-type": "application/json"
+        }
+    })
+        .then(() => {
+            getChansons(idVersion);
+        })
+        .catch((error) => {
+            if (error) {
+                alert('error');
+                return;
+            }
+            return;
+        })
+    resetModaleChanson()
+
+    return;
+}
 
 function tailleFormulaireModale() {
     let nChanson = defineNChanson.value;
@@ -133,6 +169,42 @@ function tailleFormulaireModale() {
             "'></td>"
         modaleListeChanson.appendChild(ligne);
     }
+
+    return;
+}
+
+function modalEditChanson(idChanson) {
+    let editChanson = document.getElementById(idChanson);
+    let trackEditChanson = editChanson.children[0].textContent;
+    let titreEditChanson = editChanson.children[1].textContent;
+    let dureeEditChanson = editChanson.children[2].textContent;
+    tailleFormulaireModale();
+
+    document.getElementById('newtrack0').id = idChanson
+    document.getElementById('track0').value = trackEditChanson;
+    document.getElementById('titre0').value = titreEditChanson;
+    document.getElementById('duree0').value = dureeEditChanson;
+
+    nombreChanson.classList.add('hidden');
+    let editBtn = document.getElementById("modale-add-chanson");
+    editBtn.id = "modale-edit-chanson";
+    editBtn.innerText = "Editer la Chanson";
+    modale.classList.remove("hidden");
+
+    return
+}
+
+function resetModaleChanson() {
+    modale.classList.add("hidden");
+
+    nombreChanson.classList.remove('hidden');
+    let editBtn = document.getElementById("modale-edit-chanson");
+    if (editBtn != null) {
+        editBtn.id = "modale-add-chanson";
+        editBtn.innerText = "Créer";
+    }
+
+    return
 }
 
 document.onload = getChansons(idVersion);
@@ -140,22 +212,40 @@ document.onload = getChansons(idVersion);
 document.addEventListener('click', function (event) {
     let el = event.target;
     if (el.classList.contains("delete-chanson")) {
-        idChanson = el.parentNode.parentNode.id;
+        let idChanson = el.parentNode.parentNode.id;
         deleteChanson(idChanson);
     }
 
-    if (el.classList.contains("add-chanson")) {
-        tailleFormulaireModale();
-        modale.classList.remove("hidden");
+
+
+    if (el.classList.contains("edit-chanson")) {
+        let idChanson = el.parentNode.parentNode.id;
+        modalEditChanson(idChanson);
     }
 
-    if (el.id == "modale-add-chanson") {
-        addChanson(idVersion);
-    }
+})
+
+addChansonBtn.addEventListener('click', function () {
+    tailleFormulaireModale();
+    modale.classList.remove("hidden");
 })
 
 closeModale.addEventListener('click', function () {
-    modale.classList.add("hidden");
+    resetModaleChanson()
 })
 
 defineNChanson.addEventListener('change', function () { tailleFormulaireModale() });
+
+modale.addEventListener('click', function (event) {
+    let el = event.target;
+
+    if (el.id == "modale-add-chanson") {
+        addChanson(idVersion);
+
+    }
+
+    if (el.id == "modale-edit-chanson") {
+        let idChanson = modale.getElementsByClassName('newtrack').item(0).id;
+        editChanson(idChanson);
+    }
+})

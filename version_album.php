@@ -75,7 +75,7 @@ if (isset($_GET['versionId'])) {
             </tbody>
         </table>
         <div>
-            <div class="btn btn-primary add-chanson">Ajouter des chansons</a></div>
+            <div class="btn btn-primary" id="add-chanson-btn">Ajouter des chansons</a></div>
         </div>
     </div>
 
@@ -97,7 +97,7 @@ if (isset($_GET['versionId'])) {
         </table>
         <div class="btn btn-primary" id="modale-add-chanson">Créer</div>
 
-        <div>
+        <div id='nombre-chansons'>
             <label for="nChanson" class="form-label">Nr de Chansons</label>
             <input type="number" class="form-control form-control-color" id="nChanson" value="1">
         </div>
