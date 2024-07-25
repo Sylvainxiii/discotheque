@@ -82,10 +82,41 @@ function deleteChanson(idChanson) {
 }
 
 function addChanson(idVersion) {
+    let addedChansons = document.getElementsByClassName("newtrack");
+    let url = "http://discotheque.test/src/router.php";
+    debugger
+    for (i = 0; i < addedChansons.length; i = i + 1) {
+        let nouvelleChanson = addedChansons.item(i);
+        let trackNouvelleChanson = nouvelleChanson.firstChild.firstChild.value;
+        let titreNouvelleChanson = nouvelleChanson.children[1].firstChild.value;
+        let dureeNouvelleChanson = nouvelleChanson.children[2].firstChild.value;
 
-
-
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify({
+                "idVersion": idVersion,
+                "titre": titreNouvelleChanson,
+                "duree": dureeNouvelleChanson,
+                "track": trackNouvelleChanson
+            }),
+            headers: {
+                "Content-type": "application/json"
+            }
+        })
+            .then(() => {
+            })
+            .catch((error) => {
+                if (error) {
+                    alert('error');
+                    return;
+                }
+                return;
+            })
+    }
+    getChansons(idVersion);
+    modale.classList.add("hidden");
 }
+
 
 function tailleFormulaireModale() {
     let nChanson = defineNChanson.value;
@@ -94,10 +125,11 @@ function tailleFormulaireModale() {
 
     for (i = 0; i < nChanson; i = i + 1) {
         ligne = document.createElement('tr')
+        ligne.className = "newtrack";
         ligne.id = ("newtrack" + i);
-        ligne.innerHTML = "<td><input required type='text' class='form-control' id='track" + i +
-            "'></td><td><input required type='text' class='form-control'  id='titre" + i +
-            "'></td><td><input type='text' class='form-control' id='duree" + i +
+        ligne.innerHTML = "<td><input required type='text' class='form-control track' id='track" + i +
+            "'></td><td><input required type='text' class='form-control titre'  id='titre" + i +
+            "'></td><td><input type='text' class='form-control duree' id='duree" + i +
             "'></td>"
         modaleListeChanson.appendChild(ligne);
     }
@@ -115,6 +147,10 @@ document.addEventListener('click', function (event) {
     if (el.classList.contains("add-chanson")) {
         tailleFormulaireModale();
         modale.classList.remove("hidden");
+    }
+
+    if (el.id == "modale-add-chanson") {
+        addChanson(idVersion);
     }
 })
 

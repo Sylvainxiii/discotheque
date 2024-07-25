@@ -342,15 +342,16 @@ function chansonDetail($chansonid, $pdo)
 }
 
 // Création d'une nouvelle chanson
-function createChanson($pdo)
+function addChanson($pdo)
 {
-    for ($i = 0; $i < ((count($_POST) - 1) / 3); $i++) {
-        $sql = "INSERT INTO d_chanson_cha(cha_titre, cha_duree, cha_fk_ver_id, cha_track) 
-    VALUES (:chansontitre, :chansonduree, :versionid, :chansontracknr)";
-        $stmt = $pdo->prepare($sql);
-        $params = ["chansontitre" => $_POST[$i . "titre"], "chansonduree" => $_POST[$i . "duree"], "versionid" => $_POST["versionId"], "chansontracknr" => $_POST[$i . "track"]];
-        $stmt->execute($params);
-    }
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    $sql = "INSERT INTO d_chanson_cha(cha_titre, cha_duree, cha_fk_ver_id, cha_track) 
+    VALUES (:chansontitre, :chansonduree, :idversion, :chansontracknr)";
+    $stmt = $pdo->prepare($sql);
+    $params = ["chansontitre" => $data["titre"], "chansonduree" => $data["duree"], "idversion" => $data["idVersion"], "chansontracknr" => $data["track"]];
+    $stmt->execute($params);
+
     return;
 }
 

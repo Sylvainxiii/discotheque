@@ -15,7 +15,7 @@ switch ($request_method) {
         deleteChanson($id, $pdo);
         break;
     case 'POST':
-        createChanson($pdo);
+        addChanson($pdo);
         break;
     case 'PUT':
         editchanson($id, $pdo);
