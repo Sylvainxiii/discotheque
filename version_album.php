@@ -81,25 +81,35 @@ if (isset($_GET['versionId'])) {
 
     <div class="modale hidden" id="modale-chanson">
         <div class="close-btn" id="close-modale">X</div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col"> <label class="form-label">Track Nr</label>
-                    </th>
-                    <th scope="col"> <label class="form-label">Titre de la chanson</label>
-                    </th>
-                    <th scope="col"> <label class="form-label">Durée</label>
-                    </th>
-                </tr>
-            </thead>
-            <tbody id="modale-liste-chanson">
-            </tbody>
-        </table>
-        <div class="btn btn-primary" id="modale-add-chanson">Créer</div>
+        <input type="hidden" id="modale-id-chanson">
+        <div id="modale-action-chanson">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col"> <label class="form-label">Track Nr</label>
+                        </th>
+                        <th scope="col"> <label class="form-label">Titre de la chanson</label>
+                        </th>
+                        <th scope="col"> <label class="form-label">Durée</label>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="modale-liste-chanson">
+                </tbody>
+            </table>
+            <div class="btn btn-primary" id="modale-add-chanson">Créer</div>
 
-        <div id='nombre-chansons'>
-            <label for="nChanson" class="form-label">Nr de Chansons</label>
-            <input type="number" class="form-control form-control-color" id="nChanson" value="1">
+            <div id='nombre-chansons'>
+                <label for="nChanson" class="form-label">Nr de Chansons</label>
+                <input type="number" class="form-control form-control-color" id="nChanson" value="1">
+            </div>
+        </div>
+        <div class="modal-flex-column hidden" id="modale-delete-chanson">
+            <div class="texte-modale">Voulez-vous vraiment supprimer cette chanson?</div>
+            <div class="modal-flex-row">
+                <div class="btn btn-danger" id="modale-confirm-delete-chanson">Confirmer</div>
+                <div class="btn btn-primary" id="modale-confirm-cancel-chanson">Annuler</div>
+            </div>
         </div>
 
     </div>

@@ -5,6 +5,9 @@ let closeModale = document.getElementById("close-modale");
 let nombreChanson = document.getElementById('nombre-chansons');
 let defineNChanson = document.getElementById("nChanson");
 let addChansonBtn = document.getElementById("add-chanson-btn");
+let modaleActionChanson = document.getElementById("modale-action-chanson");
+let modaleDeleteChanson = document.getElementById("modale-delete-chanson");
+let modaleidChanson = document.getElementById("modale-id-chanson");
 
 function getChansons(idVersion) {
     listeChansons.innerHTML = "";
@@ -80,6 +83,7 @@ function deleteChanson(idChanson) {
             }
             return;
         })
+    resetModaleChanson()
     alert("suppression ok");
     return;
 }
@@ -180,6 +184,7 @@ function modalEditChanson(idChanson) {
     let dureeEditChanson = editChanson.children[2].textContent;
     tailleFormulaireModale();
 
+    modaleidChanson.value = idChanson;
     document.getElementById('newtrack0').id = idChanson
     document.getElementById('track0').value = trackEditChanson;
     document.getElementById('titre0').value = titreEditChanson;
@@ -188,20 +193,34 @@ function modalEditChanson(idChanson) {
     nombreChanson.classList.add('hidden');
     let editBtn = document.getElementById("modale-add-chanson");
     editBtn.id = "modale-edit-chanson";
-    editBtn.innerText = "Editer la Chanson";
+    editBtn.textContent = "Editer la Chanson";
     modale.classList.remove("hidden");
 
     return
 }
 
+function modalDeleteChanson(idChanson) {
+    modaleidChanson.value = idChanson;
+
+    modaleDeleteChanson.classList.remove("hidden");
+    modaleActionChanson.classList.add("hidden");
+
+    modale.classList.remove("hidden");
+
+}
+
 function resetModaleChanson() {
     modale.classList.add("hidden");
+    modaleidChanson.value = "";
+
+    modaleDeleteChanson.classList.add("hidden");
+    modaleActionChanson.classList.remove("hidden");
 
     nombreChanson.classList.remove('hidden');
     let editBtn = document.getElementById("modale-edit-chanson");
     if (editBtn != null) {
         editBtn.id = "modale-add-chanson";
-        editBtn.innerText = "Créer";
+        editBtn.textContent = "Créer";
     }
 
     return
@@ -213,7 +232,8 @@ document.addEventListener('click', function (event) {
     let el = event.target;
     if (el.classList.contains("delete-chanson")) {
         let idChanson = el.parentNode.parentNode.id;
-        deleteChanson(idChanson);
+        modalDeleteChanson(idChanson);
+        // deleteChanson(idChanson);
     }
 
 
@@ -245,7 +265,15 @@ modale.addEventListener('click', function (event) {
     }
 
     if (el.id == "modale-edit-chanson") {
-        let idChanson = modale.getElementsByClassName('newtrack').item(0).id;
+        let idChanson = modaleidChanson.value;
         editChanson(idChanson);
+    }
+
+    if (el.id == "modale-confirm-delete-chanson") {
+        let idChanson = modaleidChanson.value;
+        deleteChanson(idChanson);
+    }
+    if (el.id == "modale-confirm-cancel-chanson") {
+        resetModaleChanson();
     }
 })

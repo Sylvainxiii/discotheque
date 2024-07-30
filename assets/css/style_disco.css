@@ -572,6 +572,16 @@ img {
     overflow: hidden;
 }
 
+.modal-flex-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.texte-modale {
+    color: #FFFFFF;
+}
+
 .hidden {
     display: none;
 }
