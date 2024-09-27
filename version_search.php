@@ -1,5 +1,5 @@
 <?php
-include("includes/header.php");
+include("src/__header.php");
 if (!isset($_SESSION['email'])) {
     header('Location: login.php');
 }
@@ -50,14 +50,14 @@ if (isset($_GET["versionId"])) {
     $user =  userId($email, $pdo);
 
     addToList($user["uti_id"], $_GET['versionId'], $pdo);
-    header('Location: liste.php');
+    header('Location: index.php');
 }
 
 ?>
 
 <body>
     <?php
-    include("includes/navbar.php");
+    include("src/__navbar.php");
     ?>
     <div class="container">
         <h1>Recherche d'Album</h1>
@@ -104,7 +104,7 @@ if (isset($_GET["versionId"])) {
                     ?>
                         <tr>
                             <th scope="row"><?= ($i + 1) ?></th>
-                            <td><a href="version_detail.php?versionId=<?= $data[$i]['ver_id'] ?>"><?= $data[$i]['ver_ref'] ?></a></td>
+                            <td><a href="version_album.php?versionId=<?= $data[$i]['ver_id'] ?>"><?= $data[$i]['ver_ref'] ?></a></td>
                             <td><?= $data[$i]['alb_titre'] ?></td>
                             <td><?= $data[$i]['art_nom'] ?></td>
                             <td><?= $data[$i]['ver_press_annee'] ?></td>

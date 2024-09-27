@@ -1,5 +1,5 @@
 <?php
-include('includes/header.php');
+include('src/__header.php');
 
 //Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
 if (!isset($_SESSION['email'])) {
@@ -10,14 +10,14 @@ $data = chansonDetail($_GET['chansonId'], $pdo);
 
 if (isset($_POST["chansonTitre"])) {
     editchanson($_GET['chansonId'], $pdo);
-    header("location: version_detail.php?versionId=" . $_POST['versionId']);
+    header("location: version_album.php?versionId=" . $_POST['versionId']);
 }
 
 ?>
 
 <body>
     <?php
-    include("includes/navbar.php");
+    include("src/__navbar.php");
     ?>
     <div class="container">
         <h1>Edition d'une Chanson</h1>

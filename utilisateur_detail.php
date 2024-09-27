@@ -1,5 +1,5 @@
 <?php
-include("includes/header.php");
+include("src/__header.php");
 if (!isset($_SESSION['email'])) {
     header('Location: login.php');
 }
@@ -11,13 +11,13 @@ if (isset($_SESSION['email'])) {
 
 // if (isset($_GET['delete'])) {
 //     supChanson($_GET['delete'], $pdo);
-//     header("location: version_detail.php?versionId=" . $_GET['versionId']);
+//     header("location: version_album.php?versionId=" . $_GET['versionId']);
 // }
 ?>
 
 <body>
     <?php
-    include("includes/navbar.php")
+    include("src/__navbar.php")
     ?>
 
     <div class="container">

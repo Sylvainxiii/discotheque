@@ -1,8 +1,35 @@
 <?php
+include_once("dbconnect.php");
 
-//voici un commentaire pour tester github
+$pdo = dbconnect();
 
-//FONCTIONS RELATIVES A L'UTILISATEUR
+// FUNCTION MENU ---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Menu select avec taille auto, peut être déployé n'importe ou
+function menuSelect($label, $postvalue, $table, $pdo, $def = 0)
+{
+    $sql = "SELECT * FROM $table";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $datamenu = $stmt->fetchAll(PDO::FETCH_NUM);
+
+    if ($label !== "") {
+        echo "<label for=" . $postvalue . " class='form-label'>" . $label . ":</label>";
+    }
+
+    echo "<select class='form-select' name = " . $postvalue . " id = " . $postvalue . " aria-label='Default select example'>";
+    for ($i = 0; $i < count($datamenu); $i++) {
+        if ($datamenu[$i][0] == $def) {
+            echo "<option selected value=" . $datamenu[$i][0] . ">" . $datamenu[$i][1] . "</option>";
+        } else {
+            echo "<option value=" . $datamenu[$i][0] . ">" . $datamenu[$i][1] . "</option>";
+        }
+    }
+    echo  "</select>";
+    return;
+}
+
+// FUNCTION USER ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Vérifie la connection (password et email)
 function isValid($email, $password, $pdo)
@@ -63,32 +90,18 @@ function userInfo($email, $pdo)
     return $result;
 }
 
-// Menu select avec taille auto, peut être déployé n'importe ou
-function menuSelect($label, $postvalue, $table, $pdo, $def = 0)
+//Edition du compte utilisateur
+function editUser($pdo)
 {
-    $sql = "SELECT * FROM $table";
+    $sql = "UPDATE d_utilisateur_uti SET uti_nom = :utilisateurNom, uti_prenom = :utilisateurPrenom, uti_naissance_date = :utilisateurNaissance, uti_date_edit = :utilisateurdateedit
+    WHERE uti_email = :email";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    $datamenu = $stmt->fetchAll(PDO::FETCH_NUM);
-
-    if ($label !== "") {
-        echo "<label for=" . $postvalue . " class='form-label'>" . $label . ":</label>";
-    }
-
-    echo "<select class='form-select' name = " . $postvalue . " id = " . $postvalue . " aria-label='Default select example'>";
-    for ($i = 0; $i < count($datamenu); $i++) {
-        if ($datamenu[$i][0] == $def) {
-            echo "<option selected value=" . $datamenu[$i][0] . ">" . $datamenu[$i][1] . "</option>";
-        } else {
-            echo "<option value=" . $datamenu[$i][0] . ">" . $datamenu[$i][1] . "</option>";
-        }
-    }
-    echo  "</select>";
+    $params = ["utilisateurNom" => $_POST["utilisateurNom"], "utilisateurPrenom" => $_POST["utilisateurPrenom"], "utilisateurNaissance" => $_POST["utilisateurNaissance"], "email" => $_SESSION['email'], "utilisateurdateedit" => date('Y-m-d H:i:s')];
+    $stmt->execute($params);
     return;
 }
 
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// FONCTIONS RELATIVES A L'AFFICHAGE DE VALEURS
+// FUNCTION LISTE UTILISATEUR ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //Fonctions pour l'affichage de la collection de l'utilisateur
 function getListe($email, $pdo)
@@ -109,6 +122,58 @@ function getListe($email, $pdo)
     return $result;
 }
 
+
+// Ajout de la version de l'album choisie dans la collection de l'utilisateur
+function addToList($utilisateurid, $versionid, $pdo)
+{
+    $sql = "INSERT INTO d_liste_lis (lis_fk_uti_id, lis_fk_ver_id) VALUES (:utilisateurid, :versionid)";
+    $stmt = $pdo->prepare($sql);
+    $params = ["utilisateurid" => $utilisateurid, "versionid" => $versionid];
+    $stmt->execute($params);
+    return;
+}
+
+function addImage64($pdo)
+{
+    if ($_FILES['utilisateurImg']['name'] !== "") {
+        //Récupérer le contenu de l'image
+        $file = $_FILES['utilisateurImg']['tmp_name'];
+        $image = base64_encode(file_get_contents($file));
+
+        //Insérer l'image dans la base de données
+        $sql = "UPDATE d_utilisateur_uti SET uti_avatar = :utiAvatar
+            WHERE uti_id = 1";
+        $stmt = $pdo->prepare($sql);
+        $params = ["utiAvatar" => $image];
+        $stmt->execute($params);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
+    }
+}
+
+//Edition de l'état de l'exemplaire d'un album dans la collection de l'utilisateur
+function editetat($pdo)
+{
+    $sql = "UPDATE d_liste_lis SET lis_fk_media_eta_id = :etatMedia, lis_fk_pochette_eta_id = :etatPochette
+    WHERE lis_id = :listeId";
+    $stmt = $pdo->prepare($sql);
+    $params = ["listeId" => $_GET["listeId"], "etatMedia" => $_GET["etatMedia"], "etatPochette" => $_GET["etatPochette"]];
+    $stmt->execute($params);
+    return;
+}
+
+// Suppression d'une ligne de la collection de l'Utilisateur
+function supListe($listeId, $pdo)
+{
+    $sql = "DELETE FROM d_liste_lis WHERE 	lis_id = :listeId";
+    $stmt = $pdo->prepare($sql);
+    $params = ["listeId" => $listeId];
+    $stmt->execute($params);
+    return;
+}
+
+// FUNCTION VERSION D'ALBUM ---------------------------------------------------------------------------------------------------------------------------------------------------------
+
 //Fonctions pour l'affichage des details d'un album
 function versionDetail($versionid, $pdo)
 {
@@ -126,28 +191,6 @@ function versionDetail($versionid, $pdo)
     $params = ["versionid" => $versionid];
     $stmt->execute($params);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $result;
-}
-
-//Fonction pour récupérer la liste des chanson relative à un album
-function getChanson($versionid, $pdo)
-{
-    $sql = "SELECT * FROM d_chanson_cha WHERE cha_fk_ver_id = :versionid ORDER BY cha_track ASC";
-    $stmt = $pdo->prepare($sql);
-    $params = ["versionid" => $versionid];
-    $stmt->execute($params);
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return $result;
-}
-
-//Fonction pour récupérer la liste des chanson relative à un album
-function chansonDetail($chansonid, $pdo)
-{
-    $sql = "SELECT * FROM d_chanson_cha WHERE cha_id = :chansonid";
-    $stmt = $pdo->prepare($sql);
-    $params = ["chansonid" => $chansonid];
-    $stmt->execute($params);
-    $result = $stmt->fetch();
     return $result;
 }
 
@@ -194,19 +237,6 @@ function getVersionByArtist($artistenom, $pdo)
     return $result;
 }
 
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// FONCTION POUR LA CREATION DE NOUVELLES ENTITEES
-
-// Ajout de la version de l'album choisie dans la collection de l'utilisateur
-function addToList($utilisateurid, $versionid, $pdo)
-{
-    $sql = "INSERT INTO d_liste_lis (lis_fk_uti_id, lis_fk_ver_id) VALUES (:utilisateurid, :versionid)";
-    $stmt = $pdo->prepare($sql);
-    $params = ["utilisateurid" => $utilisateurid, "versionid" => $versionid];
-    $stmt->execute($params);
-    return;
-}
-
 //Création Album
 function createVersion($pdo)
 {
@@ -228,70 +258,6 @@ function createVersion($pdo)
     return $newversionId;
 }
 
-//Création d'un nouveau titre d'album (un titre peut être identique à plusieurs versions du même album)
-function createAlbum($pdo)
-{
-    $sql = "INSERT INTO d_album_alb(alb_titre, alb_fk_gen_id,alb_sortie_annee) 
-    VALUES (:albumtitre, :genreid, :albumansortie);";
-    $stmt = $pdo->prepare($sql);
-    $params = ["albumtitre" => $_POST["albumTitre"], "genreid" => $_POST["genreId"], "albumansortie" => $_POST["albumanSortie"]];
-    $stmt->execute($params);
-    $newAlbumId = $pdo->LastInsertId();
-    return $newAlbumId;
-}
-
-// Création d'un nouvel artiste
-function createArtiste($pdo)
-{
-    $sql = "INSERT INTO d_artiste_art(art_nom, art_pays) 
-    VALUES (:artistenom, :artistepays)";
-    $stmt = $pdo->prepare($sql);
-    $params = ["artistenom" => $_POST["artisteNom"], "artistepays" => $_POST["artistePays"]];
-    $stmt->execute($params);
-    return;
-}
-
-// Permet d'appairer un artiste avec un titre d'album
-function addArtiste($artisteId, $idnomalbum, $pdo)
-{
-    $sql = "INSERT INTO d_j_art_alb_jaa (jaa_fk_alb_id, jaa_fk_art_id) VALUES (:albumid, :artisteid)";
-    $stmt = $pdo->prepare($sql);
-    $params = ["albumid" => $idnomalbum, "artisteid" => $artisteId];
-    $stmt->execute($params);
-    return;
-}
-
-// Création d'un nouvel artiste
-function createChanson($pdo)
-{
-    for ($i = 0; $i < ((count($_POST) - 1) / 3); $i++) {
-        $sql = "INSERT INTO d_chanson_cha(cha_titre, cha_duree, cha_fk_ver_id, cha_track) 
-    VALUES (:chansontitre, :chansonduree, :versionid, :chansontracknr)";
-        $stmt = $pdo->prepare($sql);
-        $params = ["chansontitre" => $_POST[$i . "titre"], "chansonduree" => $_POST[$i . "duree"], "versionid" => $_POST["versionId"], "chansontracknr" => $_POST[$i . "track"]];
-        $stmt->execute($params);
-    }
-    return;
-}
-
-function addImage64($pdo)
-{
-    if ($_FILES['utilisateurImg']['name'] !== "") {
-        //Récupérer le contenu de l'image
-        $file = $_FILES['utilisateurImg']['tmp_name'];
-        $image = base64_encode(file_get_contents($file));
-
-        //Insérer l'image dans la base de données
-        $sql = "UPDATE d_utilisateur_uti SET uti_avatar = :utiAvatar
-               WHERE uti_id = 1";
-        $stmt = $pdo->prepare($sql);
-        $params = ["utiAvatar" => $image];
-        $stmt->execute($params);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result;
-    }
-}
-
 function uploadImage($versionId, $pdo)
 {
     if (isset($_FILES['versionImg'])) {
@@ -306,7 +272,7 @@ function uploadImage($versionId, $pdo)
 
         //Insérer le chemin de l'image dans la base de données
         $sql = "UPDATE d_version_ver SET ver_image = :newfilename
-               WHERE ver_id = $versionId";
+            WHERE ver_id = $versionId";
         $stmt = $pdo->prepare($sql);
         $params = ["newfilename" => $newname];
         $stmt->execute($params);
@@ -315,19 +281,6 @@ function uploadImage($versionId, $pdo)
     }
 }
 
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// FONCTION POUR L'EDITION D'ENTITEES
-
-//Edition de l'état de l'exemplaire d'un album dans la collection de l'utilisateur
-function editetat($pdo)
-{
-    $sql = "UPDATE d_liste_lis SET lis_fk_media_eta_id = :etatMedia, lis_fk_pochette_eta_id = :etatPochette
-    WHERE lis_id = :listeId";
-    $stmt = $pdo->prepare($sql);
-    $params = ["listeId" => $_GET["listeId"], "etatMedia" => $_GET["etatMedia"], "etatPochette" => $_GET["etatPochette"]];
-    $stmt->execute($params);
-    return;
-}
 // Edition d'un album (version)
 function editVersion($versionid, $pdo)
 {
@@ -353,41 +306,6 @@ function editVersion($versionid, $pdo)
     return;
 }
 
-//Edition d'une chanson
-function editchanson($chansonid, $pdo)
-{
-    $sql = "UPDATE d_chanson_cha SET cha_titre = :chansonTitre, cha_fk_ver_id = :versionId, cha_duree = :chansonDuree, cha_track = :chansonTrackNr
-    WHERE cha_id = :chansonId";
-    $stmt = $pdo->prepare($sql);
-    $params = ["chansonId" => $chansonid, "chansonTitre" => $_POST["chansonTitre"], "versionId" => $_POST["versionId"], "chansonDuree" => $_POST["chansonDuree"], "chansonTrackNr" => $_POST["chansonTrackNr"]];
-    $stmt->execute($params);
-    return;
-}
-
-//Edition du compte utilisateur
-function editUser($pdo)
-{
-    $sql = "UPDATE d_utilisateur_uti SET uti_nom = :utilisateurNom, uti_prenom = :utilisateurPrenom, uti_naissance_date = :utilisateurNaissance, uti_date_edit = :utilisateurdateedit
-    WHERE uti_email = :email";
-    $stmt = $pdo->prepare($sql);
-    $params = ["utilisateurNom" => $_POST["utilisateurNom"], "utilisateurPrenom" => $_POST["utilisateurPrenom"], "utilisateurNaissance" => $_POST["utilisateurNaissance"], "email" => $_SESSION['email'], "utilisateurdateedit" => date('Y-m-d H:i:s')];
-    $stmt->execute($params);
-    return;
-}
-
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// FONCTION POUR LA SUPPRESSION D'ENTITEES
-
-// Suppression d'une ligne de la collection de l'Utilisateur
-function supListe($listeId, $pdo)
-{
-    $sql = "DELETE FROM d_liste_lis WHERE 	lis_id = :listeId";
-    $stmt = $pdo->prepare($sql);
-    $params = ["listeId" => $listeId];
-    $stmt->execute($params);
-    return;
-}
-
 // Suppression d'une version d'un album existante
 function supVersion($versionid, $pdo)
 {
@@ -397,12 +315,103 @@ function supVersion($versionid, $pdo)
     $stmt->execute($params);
     return;
 }
-// Suppression d'une chanson
-function supChanson($chansonid, $pdo)
+
+// FUNCTION CHANSON ---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//Fonction pour récupérer la liste des chanson relative à un album
+function getChansons($idVersion, $pdo)
 {
-    $sql = "DELETE FROM d_chanson_cha WHERE cha_id = :chansonId";
+    $sql = "SELECT * FROM d_chanson_cha WHERE cha_fk_ver_id = :idversion ORDER BY cha_track ASC";
     $stmt = $pdo->prepare($sql);
-    $params = ["chansonId" => $chansonid];
+    $params = ["idversion" => $idVersion];
+    $stmt->execute($params);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    header("Content-Type: application/json");
+    echo json_encode($result, JSON_PRETTY_PRINT);
+}
+
+//Fonction pour récupérer le détail d'une chanson relative à un album
+function chansonDetail($chansonid, $pdo)
+{
+    $sql = "SELECT * FROM d_chanson_cha WHERE cha_id = :chansonid";
+    $stmt = $pdo->prepare($sql);
+    $params = ["chansonid" => $chansonid];
+    $stmt->execute($params);
+    $result = $stmt->fetch();
+    return $result;
+}
+
+// Création d'une nouvelle chanson
+function addChanson($pdo)
+{
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    $sql = "INSERT INTO d_chanson_cha(cha_titre, cha_duree, cha_fk_ver_id, cha_track) 
+    VALUES (:chansontitre, :chansonduree, :idversion, :chansontracknr)";
+    $stmt = $pdo->prepare($sql);
+    $params = ["chansontitre" => $data["titre"], "chansonduree" => $data["duree"], "idversion" => $data["idVersion"], "chansontracknr" => $data["track"]];
+    $stmt->execute($params);
+
+    return;
+}
+
+//Edition d'une chanson
+function editchanson($pdo)
+{
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    $sql = "UPDATE d_chanson_cha SET cha_titre = :chansonTitre, cha_fk_ver_id = :idVersion, cha_duree = :chansonDuree, cha_track = :chansonTrackNr
+    WHERE cha_id = :chansonId";
+    $stmt = $pdo->prepare($sql);
+    $params = ["chansonId" => $data["idChanson"], "chansonTitre" => $data["titre"], "idVersion" => $data["idVersion"], "chansonDuree" => $data["duree"], "chansonTrackNr" => $data["track"]];
+    $stmt->execute($params);
+
+    return;
+}
+
+// Suppression d'une chanson
+function deleteChanson($idChanson, $pdo)
+{
+    $sql = "DELETE FROM d_chanson_cha WHERE cha_id = :idchanson";
+    $stmt = $pdo->prepare($sql);
+    $params = ["idchanson" => $idChanson];
+    $stmt->execute($params);
+    echo json_encode($idChanson, JSON_PRETTY_PRINT);
+}
+
+// FUNCTION TITRE ALBUM ---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//Création d'un nouveau titre d'album (un titre peut être identique à plusieurs versions du même album)
+function createAlbum($pdo)
+{
+    $sql = "INSERT INTO d_album_alb(alb_titre, alb_fk_gen_id,alb_sortie_annee) 
+    VALUES (:albumtitre, :genreid, :albumansortie);";
+    $stmt = $pdo->prepare($sql);
+    $params = ["albumtitre" => $_POST["albumTitre"], "genreid" => $_POST["genreId"], "albumansortie" => $_POST["albumanSortie"]];
+    $stmt->execute($params);
+    $newAlbumId = $pdo->LastInsertId();
+    return $newAlbumId;
+}
+
+// FUNCTION ARTISTE ---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Création d'un nouvel artiste
+function createArtiste($pdo)
+{
+    $sql = "INSERT INTO d_artiste_art(art_nom, art_pays) 
+    VALUES (:artistenom, :artistepays)";
+    $stmt = $pdo->prepare($sql);
+    $params = ["artistenom" => $_POST["artisteNom"], "artistepays" => $_POST["artistePays"]];
+    $stmt->execute($params);
+    return;
+}
+
+// Permet d'appairer un artiste avec un titre d'album
+function addArtiste($artisteId, $idnomalbum, $pdo)
+{
+    $sql = "INSERT INTO d_j_art_alb_jaa (jaa_fk_alb_id, jaa_fk_art_id) VALUES (:albumid, :artisteid)";
+    $stmt = $pdo->prepare($sql);
+    $params = ["albumid" => $idnomalbum, "artisteid" => $artisteId];
     $stmt->execute($params);
     return;
 }

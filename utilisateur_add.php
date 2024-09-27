@@ -1,15 +1,15 @@
 <?php
-include("includes/header.php");
+include("src/__header.php");
 
 if (isset($_SESSION['email'])) {
-    header('Location: liste.php');
+    header('Location: index.php');
 }
 ?>
 
 
 <body>
     <?php
-    include("includes/navbar.php");
+    include("src/__navbar.php");
 
     // je vérifie que email et password ne soient pas vide
     // je vérifie que l'utilisateur n'existe pas déjà

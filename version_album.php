@@ -1,28 +1,25 @@
 <?php
-include("includes/header.php");
+include("src/__header.php");
+
 if (!isset($_SESSION['email'])) {
     header('Location: login.php');
 }
 
 if (isset($_GET['versionId'])) {
     $data = versionDetail($_GET['versionId'], $pdo);
-    $tracklist = getChanson($_GET['versionId'], $pdo);
 }
 
-if (isset($_GET['delete'])) {
-    supChanson($_GET['delete'], $pdo);
-    header("location: version_detail.php?versionId=" . $_GET['versionId']);
-}
 ?>
 
 <body>
     <?php
-    include("includes/navbar.php")
+    include("src/__navbar.php")
     ?>
 
     <div class="container">
         <h1>Album: <?= $data['alb_titre'] ?> par <?= $data['art_nom'] ?></h1>
         <div class="text-center">
+            <input type="hidden" id="idVersion" value=<?= $_GET['versionId'] ?>>
             <img src="<?= $data['ver_image'] ?>" alt="pochette de l'album" class="img-detail">
             <table class="table">
                 <tbody>
@@ -74,34 +71,50 @@ if (isset($_GET['delete'])) {
                     <th scope="col" class="th-left"></th>
                 </tr>
             </thead>
-            <tbody>
-                <?php
-                for ($i = 0; $i < count($tracklist); $i++) {
-                ?>
-                    <tr>
-                        <th scope="row"><?= $tracklist[$i]['cha_track'] ?></th>
-                        <td><?= $tracklist[$i]['cha_titre'] ?></td>
-                        <td><?= $tracklist[$i]['cha_duree'] ?></td>
-                        <td class="btn-td">
-                            <div class="btn btn-primary"><a href="chanson_edit.php?chansonId=<?= $tracklist[$i]['cha_id'] ?>">Editer la chanson</a></div>
-                        </td>
-                        <td class="btn-td">
-                            <div class="btn btn-danger"><a href="version_detail.php?versionId=<?= $_GET['versionId'] ?>&delete=<?= $tracklist[$i]['cha_id'] ?>">Supprimer la chanson</a></div>
-                        </td>
-                    </tr>
-                <?php
-                }
-                ?>
-
-                <tr>
-                    <td colspan="5">
-                        <div class="btn btn-primary"><a href="chanson_creation.php?versionId=<?= $_GET['versionId'] ?>">Ajouter des chansons</a></div>
-                    </td>
-                </tr>
+            <tbody id="liste-chansons">
             </tbody>
         </table>
+        <div>
+            <div class="btn btn-primary" id="add-chanson-btn">Ajouter des chansons</a></div>
+        </div>
+    </div>
+
+    <div class="modale hidden" id="modale-chanson">
+        <div class="close-btn" id="close-modale">X</div>
+        <input type="hidden" id="modale-id-chanson">
+        <div id="modale-action-chanson">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col"> <label class="form-label">Track Nr</label>
+                        </th>
+                        <th scope="col"> <label class="form-label">Titre de la chanson</label>
+                        </th>
+                        <th scope="col"> <label class="form-label">Durée</label>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="modale-liste-chanson">
+                </tbody>
+            </table>
+            <div class="btn btn-primary" id="modale-add-chanson">Créer</div>
+
+            <div id='nombre-chansons'>
+                <label for="nChanson" class="form-label">Nr de Chansons</label>
+                <input type="number" class="form-control form-control-color" id="nChanson" value="1">
+            </div>
+        </div>
+        <div class="modal-flex-column hidden" id="modale-delete-chanson">
+            <div class="texte-modale">Voulez-vous vraiment supprimer cette chanson?</div>
+            <div class="modal-flex-row">
+                <div class="btn btn-danger" id="modale-confirm-delete-chanson">Confirmer</div>
+                <div class="btn btn-primary" id="modale-confirm-cancel-chanson">Annuler</div>
+            </div>
+        </div>
+
     </div>
 
 </body>
+<script src="/assets/js/album_version.js"></script>
 
 </html>

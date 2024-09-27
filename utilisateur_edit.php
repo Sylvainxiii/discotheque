@@ -1,5 +1,5 @@
 <?php
-include('includes/header.php');
+include('src/__header.php');
 
 //Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
 if (!isset($_SESSION['email'])) {
@@ -21,7 +21,7 @@ if (isset($_POST['utilisateurPrenom'])) {
 
 <body>
     <?php
-    include("includes/navbar.php");
+    include("src/__navbar.php");
     ?>
     <div class="container">
         <h1>Mes Informations Personnelles</h1>
