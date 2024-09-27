@@ -376,7 +376,7 @@ function deleteChanson($idChanson, $pdo)
     $stmt = $pdo->prepare($sql);
     $params = ["idchanson" => $idChanson];
     $stmt->execute($params);
-    return;
+    echo json_encode($idChanson, JSON_PRETTY_PRINT);
 }
 
 // FUNCTION TITRE ALBUM ---------------------------------------------------------------------------------------------------------------------------------------------------------
