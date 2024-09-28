@@ -11,7 +11,7 @@ let modaleidChanson = document.getElementById("modale-id-chanson");
 
 function getChansons(idVersion) {
     listeChansons.innerHTML = "";
-    let url = "http://discotheque.test/src/router.php?idVersion=" + idVersion;
+    let url = "../../includes/router.php?idVersion=" + idVersion;
 
     fetch(url, { method: 'GET' })
         .then(response => response.json())
@@ -71,7 +71,7 @@ function getChansons(idVersion) {
 }
 
 function deleteChanson(idChanson) {
-    let url = "http://discotheque.test/src/router.php?idChanson=" + idChanson;
+    let url = "../../includes/router.php?idChanson=" + idChanson;
     fetch(url, { method: 'DELETE' })
         .then(() => {
             getChansons(idVersion);
@@ -90,7 +90,7 @@ function deleteChanson(idChanson) {
 
 function addChanson(idVersion) {
     let addedChansons = document.getElementsByClassName("newtrack");
-    let url = "http://discotheque.test/src/router.php";
+    let url = "../../includes/router.php";
     for (i = 0; i < addedChansons.length; i = i + 1) {
         let nouvelleChanson = addedChansons.item(i);
         let trackNouvelleChanson = nouvelleChanson.firstChild.firstChild.value;
@@ -126,7 +126,7 @@ function addChanson(idVersion) {
 }
 
 function editChanson(idChanson) {
-    let url = "http://discotheque.test/src/router.php";
+    let url = "../../includes/router.php";
     let trackEditChanson = document.getElementById('track0').value;
     let titreEditChanson = document.getElementById('titre0').value;
     let dureeEditChanson = document.getElementById('duree0').value;

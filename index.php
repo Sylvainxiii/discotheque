@@ -1,9 +1,9 @@
 <?php
-include('src/__header.php');
+include_once('includes/header.php');
 
 //Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
 if (!isset($_SESSION['email'])) {
-    header("location: login.php");
+    header("location: vue/login.php");
 }
 
 $user =  userInfo($_SESSION["email"], $pdo);
@@ -25,12 +25,12 @@ if (isset($_GET['delete'])) {
 
 <body>
     <?php
-    include("src/__navbar.php");
+    include_once("includes/navbar.php");
     ?>
 
     <div class="container">
         <h1>Collection de: <?= $user['uti_prenom'] ?></h1>
-        <div class="btn btn-primary"><a href="version_search.php">Ajouter un Album</a></div>
+        <div class="btn btn-primary"><a href="vue/version_search.php">Ajouter un Album</a></div>
         <div class="text-center">
             <table class="table">
                 <thead>
@@ -58,7 +58,7 @@ if (isset($_GET['delete'])) {
                                 <img src="<?= $list[$i]['ver_image'] ?>" alt="pochette de l'album" class="img-liste">
                             </td>
                             <td><?= $list[$i]['ver_ref'] ?></td>
-                            <td><a href="version_album.php?versionId=<?= $list[$i]['ver_id'] ?>"><?= $list[$i]['alb_titre'] ?></a></td>
+                            <td><a href="vue/version_album.php?versionId=<?= $list[$i]['ver_id'] ?>"><?= $list[$i]['alb_titre'] ?></a></td>
                             <td><?= $list[$i]['art_nom'] ?></td>
                             <td class="hide"><?= $list[$i]['for_nom'] ?></td>
                             <td class="hide"><?= $list[$i]['gen_nom'] ?></td>
