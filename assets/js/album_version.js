@@ -97,15 +97,16 @@ function addChanson(idVersion) {
         let trackNouvelleChanson = nouvelleChanson.firstChild.firstChild.value;
         let titreNouvelleChanson = nouvelleChanson.children[1].firstChild.value;
         let dureeNouvelleChanson = nouvelleChanson.children[2].firstChild.value;
+        let bodyContent = {
+            "idVersion": idVersion,
+            "titre": titreNouvelleChanson,
+            "duree": dureeNouvelleChanson,
+            "track": trackNouvelleChanson
+        };
 
         fetch(url, {
             method: 'POST',
-            body: JSON.stringify({
-                "idVersion": idVersion,
-                "titre": titreNouvelleChanson,
-                "duree": dureeNouvelleChanson,
-                "track": trackNouvelleChanson
-            }),
+            body: JSON.stringify(bodyContent),
             headers: {
                 "Content-type": "application/json"
             }
@@ -131,15 +132,16 @@ function editChanson(idChanson) {
     let trackEditChanson = document.getElementById('track0').value;
     let titreEditChanson = document.getElementById('titre0').value;
     let dureeEditChanson = document.getElementById('duree0').value;
+    let bodyContent = {
+        "idVersion": idVersion,
+        "idChanson": idChanson,
+        "titre": titreEditChanson,
+        "duree": dureeEditChanson,
+        "track": trackEditChanson
+    };
     fetch(url, {
         method: 'PUT',
-        body: JSON.stringify({
-            "idVersion": idVersion,
-            "idChanson": idChanson,
-            "titre": titreEditChanson,
-            "duree": dureeEditChanson,
-            "track": trackEditChanson
-        }),
+        body: JSON.stringify(bodyContent),
         headers: {
             "Content-type": "application/json"
         }

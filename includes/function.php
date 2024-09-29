@@ -353,7 +353,7 @@ function chansonDetail($chansonid, $pdo)
 // Création d'une nouvelle chanson
 function addChanson($pdo)
 {
-    $data = json_decode(file_get_contents("php:// input"), true);
+    $data = json_decode(file_get_contents("php://input"), true);
 
     $sql = "INSERT INTO d_chanson_cha(cha_titre, cha_duree, cha_fk_ver_id, cha_track) 
     VALUES (:chansontitre, :chansonduree, :idversion, :chansontracknr)";
@@ -367,7 +367,7 @@ function addChanson($pdo)
 // Edition d'une chanson
 function editchanson($pdo)
 {
-    $data = json_decode(file_get_contents("php:// input"), true);
+    $data = json_decode(file_get_contents("php://input"), true);
 
     $sql = "UPDATE d_chanson_cha SET cha_titre = :chansonTitre, cha_fk_ver_id = :idVersion, cha_duree = :chansonDuree, cha_track = :chansonTrackNr
     WHERE cha_id = :chansonId";
