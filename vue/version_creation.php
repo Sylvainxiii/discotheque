@@ -1,20 +1,23 @@
 <?php
+// Fichier header.php contenant les inclusion de function  et initialisation de la page
 include_once('../includes/header.php');
 
-//Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
+// Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
 if (!isset($_SESSION['email'])) {
     header("location: login.php");
 }
 
+// Si une version est postée via le formulaire, création de la version
+// TODO: Passer en AJAX et alerte si version existe
 if (isset($_POST["versionRef"])) {
     createVersion($pdo);
     header("location: version_search.php");
 }
-
 ?>
 
 <body>
     <?php
+    // Inclusion de la navbar
     include_once("../includes/navbar.php");
     ?>
     <div class="container">

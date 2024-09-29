@@ -90,7 +90,7 @@ function userInfo($email, $pdo)
     return $result;
 }
 
-//Edition du compte utilisateur
+// Edition du compte utilisateur
 function editUser($pdo)
 {
     $sql = "UPDATE d_utilisateur_uti SET uti_nom = :utilisateurNom, uti_prenom = :utilisateurPrenom, uti_naissance_date = :utilisateurNaissance, uti_date_edit = :utilisateurdateedit
@@ -103,7 +103,7 @@ function editUser($pdo)
 
 // FUNCTION LISTE UTILISATEUR ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-//Fonctions pour l'affichage de la collection de l'utilisateur
+// Fonctions pour l'affichage de la collection de l'utilisateur
 function getListe($email, $pdo)
 {
     $sql = "SELECT lis_id, ver_id,  uti_email, alb_titre, ver_ref, gen_nom, for_nom, art_nom, lis_fk_media_eta_id, lis_fk_pochette_eta_id, ver_image FROM d_utilisateur_uti
@@ -136,11 +136,11 @@ function addToList($utilisateurid, $versionid, $pdo)
 function addImage64($pdo)
 {
     if ($_FILES['utilisateurImg']['name'] !== "") {
-        //Récupérer le contenu de l'image
+        // Récupérer le contenu de l'image
         $file = $_FILES['utilisateurImg']['tmp_name'];
         $image = base64_encode(file_get_contents($file));
 
-        //Insérer l'image dans la base de données
+        // Insérer l'image dans la base de données
         $sql = "UPDATE d_utilisateur_uti SET uti_avatar = :utiAvatar
             WHERE uti_id = 1";
         $stmt = $pdo->prepare($sql);
@@ -151,7 +151,7 @@ function addImage64($pdo)
     }
 }
 
-//Edition de l'état de l'exemplaire d'un album dans la collection de l'utilisateur
+// Edition de l'état de l'exemplaire d'un album dans la collection de l'utilisateur
 function editetat($pdo)
 {
     $sql = "UPDATE d_liste_lis SET lis_fk_media_eta_id = :etatMedia, lis_fk_pochette_eta_id = :etatPochette
@@ -174,7 +174,7 @@ function supListe($listeId, $pdo)
 
 // FUNCTION VERSION D'ALBUM ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-//Fonctions pour l'affichage des details d'un album
+// Fonctions pour l'affichage des details d'un album
 function versionDetail($versionid, $pdo)
 {
     $sql = "SELECT ver_id, 	ver_fk_alb_id, 	alb_titre, alb_sortie_annee, art_nom, gen_nom, ver_ref, ver_press_pays, ver_press_annee,
@@ -194,7 +194,7 @@ function versionDetail($versionid, $pdo)
     return $result;
 }
 
-//Fonction pour recherche d'une version d'un album en vue de l'ajouter dans la collection utilisateur la recherche s'effectue soit via la ref (plus précise) soit via le titre de l'album
+// Fonction pour recherche d'une version d'un album en vue de l'ajouter dans la collection utilisateur la recherche s'effectue soit via la ref (plus précise) soit via le titre de l'album
 function getVersionByRef($versionref, $pdo)
 {
     $sql = "SELECT 	ver_id, ver_ref, alb_titre, art_nom, ver_press_annee, ver_press_pays FROM d_version_ver 
@@ -237,7 +237,7 @@ function getVersionByArtist($artistenom, $pdo)
     return $result;
 }
 
-//Création Album
+// Création Album
 function createVersion($pdo)
 {
     $sql = "INSERT INTO d_version_ver(ver_fk_alb_id, ver_ref,ver_fk_for_id, ver_fk_lab_id,ver_press_annee,ver_press_pays,ver_fk_edi_id, ver_image, ver_date_add ) 
@@ -267,7 +267,7 @@ function createVersion($pdo)
 function uploadImage($versionId, $pdo)
 {
     if (isset($_FILES['versionImg'])) {
-        //Récupérer le contenu de l'image
+        // Récupérer le contenu de l'image
         $tmpName = $_FILES['versionImg']['tmp_name'];
         $name = $_FILES['versionImg']['name'];
         $newname = 'uploads/' . $name;
@@ -276,7 +276,7 @@ function uploadImage($versionId, $pdo)
 
         move_uploaded_file($tmpName, '../' . $newname);
 
-        //Insérer le chemin de l'image dans la base de données
+        // Insérer le chemin de l'image dans la base de données
         $sql = "UPDATE d_version_ver SET ver_image = :newfilename
             WHERE ver_id = $versionId";
         $stmt = $pdo->prepare($sql);
@@ -327,7 +327,7 @@ function supVersion($versionid, $pdo)
 
 // FUNCTION CHANSON ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-//Fonction pour récupérer la liste des chanson relative à un album
+// Fonction pour récupérer la liste des chanson relative à un album
 function getChansons($idVersion, $pdo)
 {
     $sql = "SELECT * FROM d_chanson_cha WHERE cha_fk_ver_id = :idversion ORDER BY cha_track ASC";
@@ -339,7 +339,7 @@ function getChansons($idVersion, $pdo)
     echo json_encode($result, JSON_PRETTY_PRINT);
 }
 
-//Fonction pour récupérer le détail d'une chanson relative à un album
+// Fonction pour récupérer le détail d'une chanson relative à un album
 function chansonDetail($chansonid, $pdo)
 {
     $sql = "SELECT * FROM d_chanson_cha WHERE cha_id = :chansonid";
@@ -353,7 +353,7 @@ function chansonDetail($chansonid, $pdo)
 // Création d'une nouvelle chanson
 function addChanson($pdo)
 {
-    $data = json_decode(file_get_contents("php://input"), true);
+    $data = json_decode(file_get_contents("php:// input"), true);
 
     $sql = "INSERT INTO d_chanson_cha(cha_titre, cha_duree, cha_fk_ver_id, cha_track) 
     VALUES (:chansontitre, :chansonduree, :idversion, :chansontracknr)";
@@ -364,10 +364,10 @@ function addChanson($pdo)
     return;
 }
 
-//Edition d'une chanson
+// Edition d'une chanson
 function editchanson($pdo)
 {
-    $data = json_decode(file_get_contents("php://input"), true);
+    $data = json_decode(file_get_contents("php:// input"), true);
 
     $sql = "UPDATE d_chanson_cha SET cha_titre = :chansonTitre, cha_fk_ver_id = :idVersion, cha_duree = :chansonDuree, cha_track = :chansonTrackNr
     WHERE cha_id = :chansonId";
@@ -390,7 +390,7 @@ function deleteChanson($idChanson, $pdo)
 
 // FUNCTION TITRE ALBUM ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-//Création d'un nouveau titre d'album (un titre peut être identique à plusieurs versions du même album)
+// Création d'un nouveau titre d'album (un titre peut être identique à plusieurs versions du même album)
 function createAlbum($pdo)
 {
     $sql = "INSERT INTO d_album_alb(alb_titre, alb_fk_gen_id,alb_sortie_annee) 

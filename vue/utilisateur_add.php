@@ -1,27 +1,30 @@
 <?php
+// Fichier header.php contenant les inclusion de function  et initialisation de la page
 include_once("../includes/header.php");
 
+// Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
 if (isset($_SESSION['email'])) {
     header('Location: ../index.php');
 }
 ?>
 
-
 <body>
     <?php
+    // Inclusion de la navbar
+    // TODO: vérifier si utile sur cette page
     include_once("../includes/navbar.php");
 
     // je vérifie que email et password ne soient pas vide
-    // je vérifie que l'utilisateur n'existe pas déjà
+    // je vérifie que l'utilisateur n'existe pas déjà, pas sur que ça fonctionne
     // je chiffre le password avec bcrypt
-
+    // TODO: La vérification de compte existant ne fonctionne pas. Validité de champs et message d'erreur en js. Passer en AJAX 
     if (isset($_POST["password"])) {
         $crypted_password = password_hash($_POST["password"], PASSWORD_BCRYPT);
         addUser($_POST["email"], $crypted_password, $pdo);
         header('Location: login.php');
     }
-
     ?>
+
     <div class="container">
         <h1>Création d'un Compte</h1>
 

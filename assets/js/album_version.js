@@ -9,6 +9,7 @@ let modaleActionChanson = document.getElementById("modale-action-chanson");
 let modaleDeleteChanson = document.getElementById("modale-delete-chanson");
 let modaleidChanson = document.getElementById("modale-id-chanson");
 
+// TODO: Séparer les fonctions REST du code spécifique à la page
 function getChansons(idVersion) {
     listeChansons.innerHTML = "";
     let url = "../../includes/router.php?idVersion=" + idVersion;
@@ -19,7 +20,7 @@ function getChansons(idVersion) {
 
             for (let $i = 0; $i < data.length; $i = $i + 1) {
 
-                //Récupération des données de L'api
+                // Récupération des données de L'api
                 id = data[$i]['cha_id'];
                 titre = data[$i]['cha_titre'];
                 duree = data[$i]['cha_duree'];
@@ -158,6 +159,7 @@ function editChanson(idChanson) {
     return;
 }
 
+// Fin des fonctions REST et début du code page
 function tailleFormulaireModale() {
     let nChanson = defineNChanson.value;
     let modaleListeChanson = document.getElementById("modale-liste-chanson");

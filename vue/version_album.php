@@ -1,18 +1,22 @@
 <?php
+// Fichier header.php contenant les inclusion de function  et initialisation de la page
 include_once("../includes/header.php");
 
+// Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
 if (!isset($_SESSION['email'])) {
     header('Location: login.php');
 }
 
+// Récupère les données de la version d'album
+// TODO: passer en AJAX
 if (isset($_GET['versionId'])) {
     $data = versionDetail($_GET['versionId'], $pdo);
 }
-
 ?>
 
 <body>
     <?php
+    // Inclusion de la navbar
     include_once("../includes/navbar.php")
     ?>
 
@@ -79,6 +83,8 @@ if (isset($_GET['versionId'])) {
         </div>
     </div>
 
+    <!-- Modales pour les actions sur les chansons -->
+    <!-- TODO: génération en full js via un composant -->
     <div class="modale hidden" id="modale-chanson">
         <div class="close-btn" id="close-modale">X</div>
         <input type="hidden" id="modale-id-chanson">

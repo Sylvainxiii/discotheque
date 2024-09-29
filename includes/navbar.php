@@ -1,4 +1,5 @@
 <?php
+// Définie les liens de navigation en fonction de l'état de connection de l'utilisateur
 if (isset($_SESSION["email"])) {
     $home = "../index.php";
     $log = "Logout";
@@ -9,16 +10,17 @@ if (isset($_SESSION["email"])) {
     $log = "Login";
     $logref = "../vue/login.php";
 }
-
 ?>
 
+<!-- Navbar PC -->
 <div class="navbar-pc">
-
+    <!-- Boutons sur la droite de la navbar -->
     <div class="main-pages-pc-droite">
         <a class="nav-link" aria-current="page" href=<?= $home ?>>Home</a>
         <a class="nav-link" href="../vue/version_search.php">Rechercher un Album</a>
         <a class="nav-link" href="../vue/utilisateur_detail.php">Mon Compte</a>
     </div>
+    <!-- Boutons et image sur la gauche de la navbar -->
     <div class="main-pages-pc-gauche">
         <a class="nav-link" href=<?= $logref ?>><?= $log ?></a>
         <?php
@@ -27,10 +29,9 @@ if (isset($_SESSION["email"])) {
         }
         ?>
     </div>
-
 </div>
 
-
+<!-- Navbar Mobile avec bouton burger -->
 <input class="navbar-bouton" id='navbar-bouton' type="checkbox">
 <label for="navbar-bouton" class="hamburger hamburger2">
     <span class="bar bar1"></span>

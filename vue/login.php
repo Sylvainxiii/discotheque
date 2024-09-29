@@ -1,7 +1,9 @@
 <?php
+// Fichier header.php contenant les inclusion de function  et initialisation de la page
 include_once("../includes/header.php");
 
-
+// Si l'utilisateur est connecté via $_SESSION, redirection vers la page index, si password non reconnu redirection création de compte
+// TODO: Amélioration du comportement pour indiquer une erreur de pssword sans redirection, ajout bouton création compte, validation js des champs
 if (count($_POST) > 0) {
     if (isValid($_POST['email'], $_POST['password'], $pdo)) {
         $_SESSION['email'] = $_POST['email'];
@@ -32,7 +34,6 @@ if (count($_POST) > 0) {
     </body>
 
     </html>
-
 <?php
 }
 ?>

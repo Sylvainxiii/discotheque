@@ -1,17 +1,24 @@
 <?php
+// Fichier header.php contenant les inclusion de function  et initialisation de la page
 include_once('../includes/header.php');
 
-//Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
+// Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
 if (!isset($_SESSION['email'])) {
     header("location: login.php");
 }
 
+// Récupération des données de l'utilisateur
+// TODO: passer en AJAX
 $data = userInfo($_SESSION['email'], $pdo);
 
+// Stockage an base64 de l'image d'avatar dans la bdd si ce dernier est envoyé dans le formulaire
+// TODO: passer en AJAX
 if (isset($_FILES['utilisateurImg'])) {
     addImage64($pdo);
 }
 
+// Edite les informations de l'utilisateur
+// TODO: passer en AJAX
 if (isset($_POST['utilisateurPrenom'])) {
     editUser($pdo);
     header("location: utilisateur_detail.php");
@@ -21,6 +28,7 @@ if (isset($_POST['utilisateurPrenom'])) {
 
 <body>
     <?php
+    // Inclusion de la navbar
     include_once("../includes/navbar.php");
     ?>
     <div class="container">

@@ -1,22 +1,27 @@
 <?php
+// Fichier header.php contenant les inclusion de function  et initialisation de la page
 include_once('../includes/header.php');
 
-//Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
+// Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
 if (!isset($_SESSION['email'])) {
     header("location: login.php");
 }
 
+// Récupération des données de la version
+// TODO: A passer en AJAX
 $data = versionDetail($_GET['versionId'], $pdo);
 
+// Edite la version si le format est posté, peut-être choisir un autre trigger
+// TODO: A passer en AJAX
 if (isset($_POST["formatId"])) {
     editVersion($_GET['versionId'], $pdo);
     header("location: ../index.php");
 }
-
 ?>
 
 <body>
     <?php
+    // Inclusion de la navbar
     include_once("../includes/navbar.php");
     ?>
     <div class="container">

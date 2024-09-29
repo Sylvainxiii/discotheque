@@ -1,21 +1,24 @@
 <?php
+// Fichier header.php contenant les inclusion de function  et initialisation de la page
+
 include_once('../includes/header.php');
 
-//Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
+// Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
 if (!isset($_SESSION['email'])) {
     header("location: login.php");
 }
 
+// Ajout dans la BDD du itre de l'album et lie l'artiste correspondant
+// TODO: PAsser en AJAX
 if (isset($_POST['albumTitre'])) {
     addArtiste($_POST["artisteId"], createAlbum($pdo), $pdo);
     header("location: version_creation.php");
 }
-
-
 ?>
 
 <body>
     <?php
+    // Inclusion de la navbar
     include_once("../includes/navbar.php");
     ?>
     <div class="container">

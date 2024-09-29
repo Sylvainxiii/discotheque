@@ -1,31 +1,38 @@
 <?php
-include_once('includes/header.php');
+// Fichier header.php contenant les inclusion de function  et initialisation de la page
+include_once 'includes/header.php';
 
-//Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
+// Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
 if (!isset($_SESSION['email'])) {
     header("location: vue/login.php");
 }
 
+// Récupération des données de l'utilisateur
+// TODO: passer en AJAX
 $user =  userInfo($_SESSION["email"], $pdo);
 
-$list = [];
+// Récupération de la collection de l'utilisateur
 $list = getListe($_SESSION["email"], $pdo);
 
+// Modification de l'état des disques de la collection (Bouton "Modifier l'état")
+// TODO: Passer en AJAX
 if (isset($_GET['listeId'])) {
     editetat($pdo);
     header("location: index.php");
 }
 
+// Suppression d'un disque de la collection (Bouton "Supprimer")
+// TODO: Passer en AJAX
 if (isset($_GET['delete'])) {
     supListe($_GET['delete'], $pdo);
     header("location: index.php");
 }
-
 ?>
 
 <body>
     <?php
-    include_once("includes/navbar.php");
+    // Inclusion de la navbar
+    include_once "includes/navbar.php";
     ?>
 
     <div class="container">
@@ -48,10 +55,12 @@ if (isset($_GET['delete'])) {
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Début d'une boucle PHP qui crée une ligne de tableau par album 
+                         Les class 'hide' sont cachées en version mobile 
+                         TODO:  Combiner form-etat-pc et form-etat-mobile et affichage responsive en js -->
                     <?php
                     for ($i = 0; $i < count($list); $i++) {
                     ?>
-
                         <tr>
                             <th scope="row" class="th-center th-row"><?= ($i + 1) ?></th>
                             <td class="hide">
@@ -75,7 +84,6 @@ if (isset($_GET['delete'])) {
                             </td>
                         </tr>
                         <tr class="form-etat-mobile">
-
                             <th scope="row" class="th-center th-row"></th>
                             <form action="index.php" method="get">
                                 <input type="hidden" name="listeId" id="listeId" value=<?= $list[$i]['lis_id'] ?>>
@@ -93,10 +101,9 @@ if (isset($_GET['delete'])) {
                                 <div class="btn btn-danger"><a href="index.php?delete=<?= $list[$i]['lis_id'] ?>">Supprimer</a></div>
                             </td>
                         </tr>
-
                     <?php
-                    }
-                    ?>
+                    } ?>
+                    <!-- FIN de la boucle PHP -->
                 </tbody>
             </table>
         </div>

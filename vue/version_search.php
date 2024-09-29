@@ -1,10 +1,13 @@
 <?php
+// Fichier header.php contenant les inclusion de function  et initialisation de la page
 include_once("../includes/header.php");
 
+// Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
 if (!isset($_SESSION['email'])) {
     header('Location: login.php');
 }
 
+// TODO: Passer la recherche en AJAX
 // Ici nous récupérons les listes d'album suivant les critères renseignés, les variables définies avant l'appel des fonctions permettent d'effectuer une recherche avec
 // seulement quelques caractères.
 if (isset($_POST['versionRef'])) {
@@ -30,7 +33,6 @@ if (isset($_POST['artisteNom'])) {
 
 // $data sera la liste retournée d'album peu importe si la recherche s'effectue via la ref, le titre de l'album ou l'artiste
 // si les trois champs sont renseignés , la priorité se fera sur la recherche via ref qui est plus précise puis via le titre de l'album et enfin par l'artiste
-
 if (count($dataref) > 0) {
     $data = $dataref;
 } else {
@@ -45,7 +47,7 @@ if (count($dataref) > 0) {
     }
 }
 
-//Ajoute le disque à la liste de l'utilisateur une fois que l'id de l'album a été inclus dans la variable $_GET, puis redirection vers la liste utilisateur.
+// Ajoute le disque à la liste de l'utilisateur une fois que l'id de l'album a été inclus dans la variable $_GET, puis redirection vers la liste utilisateur.
 if (isset($_GET["versionId"])) {
     $email = $_SESSION['email'];
     $user =  userId($email, $pdo);
@@ -53,11 +55,11 @@ if (isset($_GET["versionId"])) {
     addToList($user["uti_id"], $_GET['versionId'], $pdo);
     header('Location: ../index.php');
 }
-
 ?>
 
 <body>
     <?php
+    // Inclusion de la navbar
     include_once("../includes/navbar.php");
     ?>
     <div class="container">
