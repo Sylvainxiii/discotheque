@@ -1,7 +1,4 @@
 <?php
-include_once("dbconnect.php");
-
-$pdo = dbconnect();
 
 // FUNCTION MENU ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -339,17 +336,6 @@ function getChansons($idVersion, $pdo)
     echo json_encode($result, JSON_PRETTY_PRINT);
 }
 
-// Fonction pour récupérer le détail d'une chanson relative à un album
-function chansonDetail($chansonid, $pdo)
-{
-    $sql = "SELECT * FROM d_chanson_cha WHERE cha_id = :chansonid";
-    $stmt = $pdo->prepare($sql);
-    $params = ["chansonid" => $chansonid];
-    $stmt->execute($params);
-    $result = $stmt->fetch();
-    return $result;
-}
-
 // Création d'une nouvelle chanson
 function addChanson($pdo)
 {
@@ -358,9 +344,16 @@ function addChanson($pdo)
     $sql = "INSERT INTO d_chanson_cha(cha_titre, cha_duree, cha_fk_ver_id, cha_track) 
     VALUES (:chansontitre, :chansonduree, :idversion, :chansontracknr)";
     $stmt = $pdo->prepare($sql);
-    $params = ["chansontitre" => $data["titre"], "chansonduree" => $data["duree"], "idversion" => $data["idVersion"], "chansontracknr" => $data["track"]];
+    $params = [
+        "chansontitre" => $data["titre"],
+        "chansonduree" => $data["duree"],
+        "idversion" => $data["idVersion"],
+        "chansontracknr" => $data["track"]
+    ];
     $stmt->execute($params);
 
+    $lastInsertId = $pdo->lastInsertId();
+    echo json_encode(["id" => $lastInsertId], JSON_PRETTY_PRINT);
     return;
 }
 
@@ -375,17 +368,22 @@ function editchanson($pdo)
     $params = ["chansonId" => $data["idChanson"], "chansonTitre" => $data["titre"], "idVersion" => $data["idVersion"], "chansonDuree" => $data["duree"], "chansonTrackNr" => $data["track"]];
     $stmt->execute($params);
 
+    echo json_encode(["id" => $data["idChanson"]], JSON_PRETTY_PRINT);
     return;
 }
 
 // Suppression d'une chanson
-function deleteChanson($idChanson, $pdo)
+function deleteChanson($pdo)
 {
+    $data = json_decode(file_get_contents("php://input"), true);
+
     $sql = "DELETE FROM d_chanson_cha WHERE cha_id = :idchanson";
     $stmt = $pdo->prepare($sql);
-    $params = ["idchanson" => $idChanson];
+    $params = ["idchanson" => $data["idChanson"]];
     $stmt->execute($params);
-    echo json_encode($idChanson, JSON_PRETTY_PRINT);
+
+    echo json_encode(["id" => $data["idChanson"]], JSON_PRETTY_PRINT);
+    return;
 }
 
 // FUNCTION TITRE ALBUM ---------------------------------------------------------------------------------------------------------------------------------------------------------

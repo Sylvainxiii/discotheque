@@ -2,7 +2,10 @@
 session_start();
 
 // Appel du fichier de fonctions
-require_once("function.php");
+require_once("fonction.php");
+include_once("dbconnect.php");
+
+$pdo = dbconnect();
 ?>
 
 <!DOCTYPE html>

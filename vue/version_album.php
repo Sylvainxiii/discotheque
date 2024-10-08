@@ -12,6 +12,8 @@ if (!isset($_SESSION['email'])) {
 if (isset($_GET['versionId'])) {
     $data = versionDetail($_GET['versionId'], $pdo);
 }
+
+$infopage = pathinfo(__FILE__);
 ?>
 
 <body>
@@ -83,44 +85,9 @@ if (isset($_GET['versionId'])) {
         </div>
     </div>
 
-    <!-- Modales pour les actions sur les chansons -->
-    <!-- TODO: génération en full js via un composant -->
-    <div class="modale hidden" id="modale-chanson">
-        <div class="close-btn" id="close-modale">X</div>
-        <input type="hidden" id="modale-id-chanson">
-        <div id="modale-action-chanson">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col"> <label class="form-label">Track Nr</label>
-                        </th>
-                        <th scope="col"> <label class="form-label">Titre de la chanson</label>
-                        </th>
-                        <th scope="col"> <label class="form-label">Durée</label>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="modale-liste-chanson">
-                </tbody>
-            </table>
-            <div class="btn btn-primary" id="modale-add-chanson">Créer</div>
-
-            <div id='nombre-chansons'>
-                <label for="nChanson" class="form-label">Nr de Chansons</label>
-                <input type="number" class="form-control form-control-color" id="nChanson" value="1">
-            </div>
-        </div>
-        <div class="modal-flex-column hidden" id="modale-delete-chanson">
-            <div class="texte-modale">Voulez-vous vraiment supprimer cette chanson?</div>
-            <div class="modal-flex-row">
-                <div class="btn btn-danger" id="modale-confirm-delete-chanson">Confirmer</div>
-                <div class="btn btn-primary" id="modale-confirm-cancel-chanson">Annuler</div>
-            </div>
-        </div>
-
-    </div>
-
 </body>
-<script src="../assets/js/album_version.js"></script>
+<script type="module" src="../assets/js/fonctions_rest.js"></script>
+<script type="module" src="../assets/js/composants.js"></script>
+<script type="module" src="../assets/js/<?= $infopage['filename'] ?>.js"></script>
 
 </html>

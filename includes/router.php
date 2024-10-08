@@ -1,7 +1,7 @@
 <?php
 
 // Inclusion du fichier de fonctions et de la config de connexion BDD
-include_once("function.php");
+include_once("fonction.php");
 include_once("dbconnect.php");
 
 $request_method = $_SERVER["REQUEST_METHOD"];
@@ -14,8 +14,7 @@ switch ($request_method) {
         getChansons($id, $pdo);
         break;
     case 'DELETE':
-        $id = intval($_GET["idChanson"]);
-        deleteChanson($id, $pdo);
+        deleteChanson($pdo);
         break;
     case 'POST':
         addChanson($pdo);
