@@ -26,6 +26,44 @@ function menuSelect($label, $postvalue, $table, $pdo, $def = 0)
     return;
 }
 
+/**
+ * Recupère les données d'une table pour definir les options d'un select
+ * 
+ * @param array $parametres
+ * @param PDO $pdo
+ * @return void
+ */
+function getSelect($parametres, $pdo)
+{
+    $table = $parametres["table"];
+    $sql = "SELECT * FROM $table";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $datamenu = $stmt->fetchAll(PDO::FETCH_NUM);
+
+    header("Content-Type: application/json");
+    echo json_encode($datamenu, JSON_PRETTY_PRINT);
+}
+
+/**
+ * Récupère l'id d'une valeur dans une table
+ * 
+ * @param string $valeur
+ * @param string $table
+ * @param string $champs
+ * @param PDO $pdo
+ * @return int
+ */
+function getId($valeur, $table, $champs, $pdo)
+{
+    $sql = "SELECT * FROM $table WHERE $champs = :value";
+    $stmt = $pdo->prepare($sql);
+    $params = ["value" => $valeur];
+    $stmt->execute($params);
+    $result = $stmt->fetch(PDO::FETCH_NUM);
+    return $result[0];
+}
+
 // FUNCTION USER ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Vérifie la connection (password et email)
@@ -172,10 +210,10 @@ function supListe($listeId, $pdo)
 // FUNCTION VERSION D'ALBUM ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Fonctions pour l'affichage des details d'un album
-function versionDetail($versionid, $pdo)
+function versionDetail($parametres, $pdo)
 {
-    $sql = "SELECT ver_id, 	ver_fk_alb_id, 	alb_titre, alb_sortie_annee, art_nom, gen_nom, ver_ref, ver_press_pays, ver_press_annee,
-    ver_fk_edi_id, edi_type, ver_fk_for_id, for_nom, ver_fk_lab_id, lab_nom, ver_image 
+    $sql = "SELECT ver_id, 	ver_fk_alb_id, 	alb_titre, alb_sortie_annee, art_nom, gen_nom, ver_ref as reference, ver_press_pays as pays, ver_press_annee as pressageAnnee,
+    ver_fk_edi_id, edi_type as type, ver_fk_for_id, for_nom as format, ver_fk_lab_id, lab_nom as label, ver_image as image
     FROM d_version_ver INNER JOIN d_album_alb ON ver_fk_alb_id = alb_id 
     INNER JOIN d_j_art_alb_jaa ON alb_id = jaa_fk_alb_id	 
     INNER JOIN d_artiste_art ART ON jaa_fk_art_id = art_id 
@@ -185,10 +223,11 @@ function versionDetail($versionid, $pdo)
     INNER JOIN d_edition_edi  ON ver_fk_edi_id = edi_id
     WHERE ver_id = :versionid";
     $stmt = $pdo->prepare($sql);
-    $params = ["versionid" => $versionid];
+    $params = ["versionid" => $parametres["id"]];
     $stmt->execute($params);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $result;
+    header("Content-Type: application/json");
+    echo json_encode($result, JSON_PRETTY_PRINT);
 }
 
 // Fonction pour recherche d'une version d'un album en vue de l'ajouter dans la collection utilisateur la recherche s'effectue soit via la ref (plus précise) soit via le titre de l'album
@@ -261,54 +300,120 @@ function createVersion($pdo)
     return $newversionId;
 }
 
+/**
+ * Fonction pour uploader une image d'une version d'un album
+ * 
+ * @param int $versionId l'id de la version d'un album
+ * @param PDO $pdo l'objet de connection pdo
+ * @return bool
+ */
 function uploadImage($versionId, $pdo)
 {
-    if (isset($_FILES['versionImg'])) {
-        // Récupérer le contenu de l'image
-        $tmpName = $_FILES['versionImg']['tmp_name'];
-        $name = $_FILES['versionImg']['name'];
-        $newname = 'uploads/' . $name;
-        // $size = $_FILES['versionImg']['size'];
-        // $error = $_FILES['versionImg']['error'];
+    if (isset($_FILES['image'])) {
+        $tmpName = $_FILES['image']['tmp_name'];
+        $name = $_FILES['image']['name'];
 
-        move_uploaded_file($tmpName, '../' . $newname);
+        // Créer le chemin absolu
+        $uploadDir = realpath(__DIR__ . '/../uploads');
+        $destination = $uploadDir . DIRECTORY_SEPARATOR . $name;
 
-        // Insérer le chemin de l'image dans la base de données
-        $sql = "UPDATE d_version_ver SET ver_image = :newfilename
-            WHERE ver_id = $versionId";
-        $stmt = $pdo->prepare($sql);
-        $params = ["newfilename" => $newname];
-        $stmt->execute($params);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result;
+        // S'assurer que le dossier existe
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        if (move_uploaded_file($tmpName, $destination)) {
+            $sql = "UPDATE d_version_ver SET ver_image = :newfilename WHERE ver_id = :versionId";
+            $stmt = $pdo->prepare($sql);
+            $params = [
+                "newfilename" => 'uploads/' . $name,
+                "versionId" => $versionId
+            ];
+            return $stmt->execute($params);
+        }
+
+        return false;
     }
+    return false;
 }
 
-// Edition d'un album (version)
-function editVersion($versionid, $pdo)
+/**
+ * Fonction pour modifier une version d'un album
+ * 
+ * @param PDO $pdo
+ * @return array
+ */
+function editVersion($pdo)
 {
+    $rawData = file_get_contents("php://input");
 
+    // Récupérer le boundary depuis le Content-Type
+    $contentType = $_SERVER['CONTENT_TYPE'];
+    // $boundary est le séparateur de chaque partie dans le contenu de la requête, il est défini dans la première ligne juste après le Content-Type
+    $boundary = substr($contentType, strpos($contentType, "boundary=") + 9);
+
+    // Séparer les parties du multipart
+    $parts = array_slice(explode("--" . $boundary, $rawData), 1, -1);
+    $data = [];
+
+    // Parser chaque partie
+    foreach ($parts as $part) {
+        // Si c'est un fichier
+        if (strpos($part, 'filename=') !== false) {
+            preg_match('/name="([^"]+)"/i', $part, $matches);
+            if ($matches[1] === 'image') {
+                // Extraire le nom du fichier et le contenu
+                preg_match('/filename="([^"]+)"/i', $part, $fileMatch);
+                $fileName = $fileMatch[1] ?? 'unknown';
+                list(, $content) = explode("\r\n\r\n", $part, 2);
+
+                // Écrire directement dans le dossier uploads
+                $uploadDir = realpath(__DIR__ . '/../uploads');
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+
+                $destination = $uploadDir . DIRECTORY_SEPARATOR . $fileName;
+                if (file_put_contents($destination, trim($content))) {
+                    // Mise à jour du chemin du fichier dans la base de données
+                    $sql = "UPDATE d_version_ver SET ver_image = :newfilename WHERE ver_id = :versionId";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute([
+                        "newfilename" => 'uploads/' . $fileName,
+                        "versionId" => $data["versionId"]
+                    ]);
+                }
+            }
+        }
+        // Si c'est un champ normal
+        else {
+            preg_match('/name="([^"]+)"/i', $part, $matches);
+            if ($matches[1]) {
+                list(, $value) = explode("\r\n\r\n", $part, 2);
+                $data[$matches[1]] = trim($value);
+            }
+        }
+    }
+
+    // Mise à jour de la base de données
     $sql = "UPDATE d_version_ver 
-        SET  	ver_fk_for_id = :formatId, ver_fk_lab_id = :labelId, ver_press_annee = :versionPressYear, 
+        SET  	ver_ref = :reference, ver_fk_for_id = :formatId, ver_fk_lab_id = :labelId, ver_press_annee = :versionPressYear, 
         ver_press_pays = :versionPressPays, ver_fk_edi_id = :versionEditId, ver_date_edit = :versiondateedit
         WHERE ver_id = :versionId";
     $stmt = $pdo->prepare($sql);
     $params = [
-        "versionId" => $versionid,
-        "formatId" => $_POST["formatId"],
-        "labelId" => $_POST["labelId"],
-        "versionPressYear" => $_POST["versionPressYear"],
-        "versionPressPays" => $_POST["versionPressPays"],
-        "versionEditId" => $_POST["versionEditId"],
+        "versionId" => $data["versionId"],
+        "reference" => $data["reference"],
+        "formatId" => getId($data["format"], "d_format_for", "for_nom", $pdo),
+        "labelId" => getId($data["label"], "d_label_lab", "lab_nom", $pdo),
+        "versionPressYear" => $data["pressageAnnee"],
+        "versionPressPays" => $data["pays"],
+        "versionEditId" => getId($data["type"], "d_edition_edi", "edi_type", $pdo),
         "versiondateedit" => date('Y-m-d H:i:s')
     ];
-
-    if ($_FILES["versionImg"]['name'] !== "") {
-        uploadImage($versionid, $pdo);
-    }
-
-
     $stmt->execute($params);
+
+    echo json_encode(["id" => $data["versionId"]], JSON_PRETTY_PRINT);
     return;
 }
 
@@ -324,19 +429,31 @@ function supVersion($versionid, $pdo)
 
 // FUNCTION CHANSON ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// Fonction pour récupérer la liste des chanson relative à un album
-function getChansons($idVersion, $pdo)
+/**
+ * Fonction pour récupérer la liste des chanson relative à un album.
+ *
+ * @param int $idVersion l'ID de la version de l'album dont les chansons sont recherchées.
+ * @param PDO $pdo l'objet de connection pdo.
+ * @return array tableau associatif contenant les données des chansons.
+ */
+function getChansons($parametres, $pdo)
 {
     $sql = "SELECT * FROM d_chanson_cha WHERE cha_fk_ver_id = :idversion ORDER BY cha_track ASC";
     $stmt = $pdo->prepare($sql);
-    $params = ["idversion" => $idVersion];
+    $params = ["idversion" => $parametres["id"]];
     $stmt->execute($params);
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     header("Content-Type: application/json");
     echo json_encode($result, JSON_PRETTY_PRINT);
 }
 
-// Création d'une nouvelle chanson
+/**
+ * Création d'une nouvelle chanson.
+ *
+ *
+ * @param PDO $pdo l'objet de connection pdo.
+ * @return void
+ */
 function addChanson($pdo)
 {
     $data = json_decode(file_get_contents("php://input"), true);
@@ -357,7 +474,13 @@ function addChanson($pdo)
     return;
 }
 
-// Edition d'une chanson
+/**
+ * Edition d'une chanson.
+ *
+ *
+ * @param PDO $pdo l'objet de connection pdo.
+ * @return void
+ */
 function editchanson($pdo)
 {
     $data = json_decode(file_get_contents("php://input"), true);
@@ -365,14 +488,26 @@ function editchanson($pdo)
     $sql = "UPDATE d_chanson_cha SET cha_titre = :chansonTitre, cha_fk_ver_id = :idVersion, cha_duree = :chansonDuree, cha_track = :chansonTrackNr
     WHERE cha_id = :chansonId";
     $stmt = $pdo->prepare($sql);
-    $params = ["chansonId" => $data["idChanson"], "chansonTitre" => $data["titre"], "idVersion" => $data["idVersion"], "chansonDuree" => $data["duree"], "chansonTrackNr" => $data["track"]];
+    $params = [
+        "chansonId" => $data["idChanson"],
+        "chansonTitre" => $data["titre"],
+        "idVersion" => $data["idVersion"],
+        "chansonDuree" => $data["duree"],
+        "chansonTrackNr" => $data["track"]
+    ];
     $stmt->execute($params);
 
     echo json_encode(["id" => $data["idChanson"]], JSON_PRETTY_PRINT);
     return;
 }
 
-// Suppression d'une chanson
+/**
+ * Suppression d'une chanson.
+ *
+ *
+ * @param PDO $pdo l'objet de connection pdo.
+ * @return void
+ */
 function deleteChanson($pdo)
 {
     $data = json_decode(file_get_contents("php://input"), true);

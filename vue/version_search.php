@@ -48,11 +48,11 @@ if (count($dataref) > 0) {
 }
 
 // Ajoute le disque à la liste de l'utilisateur une fois que l'id de l'album a été inclus dans la variable $_GET, puis redirection vers la liste utilisateur.
-if (isset($_GET["versionId"])) {
+if (isset($_GET["id"])) {
     $email = $_SESSION['email'];
     $user =  userId($email, $pdo);
 
-    addToList($user["uti_id"], $_GET['versionId'], $pdo);
+    addToList($user["uti_id"], $_GET['id'], $pdo);
     header('Location: ../index.php');
 }
 ?>

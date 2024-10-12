@@ -1,25 +1,89 @@
 <?php
 
-// Inclusion du fichier de fonctions et de la config de connexion BDD
 include_once("fonction.php");
 include_once("dbconnect.php");
 
-$request_method = $_SERVER["REQUEST_METHOD"];
-$pdo = dbconnect();
+/**
+ * Routeur
+ * 
+ * Suivant la méthode de requête et l'entité,
+ * récupère dans la variable $route, la fonction correspondante.
+ * Pour la méthode GET, vérifie si les paramètrees requis sont présent et les récupère pour les passer en paramètre de la fonction.
+ */
 
-// TODO: supprimer les id via GET dans l'url du routeur, à remplacer par données dans le body de la requête. Remplacer SWITCH() par MATCH() pour une syntaxe plus courte et une comparaison plus précise et solide
-switch ($request_method) {
-    case 'GET':
-        $id = intval($_GET["idVersion"]);
-        getChansons($id, $pdo);
-        break;
-    case 'DELETE':
-        deleteChanson($pdo);
-        break;
-    case 'POST':
-        addChanson($pdo);
-        break;
-    case 'PUT':
-        editchanson($pdo);
-        break;
+$pdo = dbconnect();
+$request_method = $_SERVER["REQUEST_METHOD"];
+$entite = $_GET["entite"];
+
+// Chaque paramètre peut être requis ou optionnel
+$routes = [
+    'GET' => [
+        'chanson' => [
+            'fonction' => 'getChansons',
+            'parametres' => [
+                'id' => 'requis'
+            ]
+        ],
+        'select' => [
+            'fonction' => 'getSelect',
+            'parametres' => [
+                'table' => 'requis'
+            ]
+        ],
+        'version' => [
+            'fonction' => 'versionDetail',
+            'parametres' => [
+                'id' => 'requis'
+            ]
+        ]
+    ],
+    'DELETE' => [
+        'chanson' => ['fonction' => 'deleteChanson']
+    ],
+    'POST' => [
+        'chanson' => ['fonction' => 'addChanson']
+    ],
+    'PUT' => [
+        'chanson' => ['fonction' => 'editchanson'],
+        'version' => ['fonction' => 'editVersion']
+    ]
+];
+
+if (isset($routes[$request_method][$entite])) {
+    $route = $routes[$request_method][$entite];
+    $function = $route['fonction'];
+
+    if ($request_method === 'GET') {
+        $parametres = valideEtGetParametres($route);
+        $function($parametres, $pdo);
+    } else {
+        $function($pdo);
+    }
+} else {
+    http_response_code(404);
+    echo json_encode(['error' => 'Route not found']);
+}
+
+/**
+ * Vérifie si les paramètres requis sont présents dans la requête et retourne un tableau associatif contenant les paramètres requis.
+ * 
+ * @param array $route Les paramètres de la route.
+ * @return array Un tableau associatif contenant les paramètres requis.
+ */
+function valideEtGetParametres($route)
+{
+    $parametre = [];
+    $parametresRequis = $route['parametres'] ?? [];
+
+    // Vérification si les parametres requis sont présents dans la requête
+    foreach ($parametresRequis as $param => $requisition) {
+        if ($requisition === 'requis' && !isset($_GET[$param])) {
+            http_response_code(400);
+            echo json_encode(['error' => "Missing required parameter: $param"]);
+            exit;
+        } elseif ($_GET[$param]) {
+            $parametre[$param] = $_GET[$param];
+        }
+    }
+    return $parametre;
 }

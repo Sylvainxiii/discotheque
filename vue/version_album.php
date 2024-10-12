@@ -9,9 +9,9 @@ if (!isset($_SESSION['email'])) {
 
 // Récupère les données de la version d'album
 // TODO: passer en AJAX
-if (isset($_GET['versionId'])) {
-    $data = versionDetail($_GET['versionId'], $pdo);
-}
+// if (isset($_GET['id'])) {
+//     $data = versionDetail($_GET['id'], $pdo);
+// }
 
 $infopage = pathinfo(__FILE__);
 ?>
@@ -23,45 +23,63 @@ $infopage = pathinfo(__FILE__);
     ?>
 
     <div class="container">
-        <h1>Album: <?= $data['alb_titre'] ?> par <?= $data['art_nom'] ?></h1>
+        <h1></h1>
         <div class="text-center">
-            <input type="hidden" id="idVersion" value=<?= $_GET['versionId'] ?>>
-            <img src="../<?= $data['ver_image'] ?>" alt="pochette de l'album" class="img-detail">
+            <input type="hidden" id="idVersion" value=<?= $_GET['id'] ?>>
+
+            <img class="img-detail" id="version-edit-image">
+
             <table class="table">
                 <tbody>
                     <tr>
                         <th colspan="2" class="th-left">Année: </th>
-                        <td colspan="2"><?= $data['alb_sortie_annee'] ?></td>
+                        <td colspan="2">
+                            <div id="version-edit-sortie-annee"></div>
+                        </td>
                     </tr>
                     <tr>
                         <th colspan="2" class="th-left">Genre: </th>
-                        <td colspan="2"><?= $data['gen_nom'] ?></td>
+                        <td colspan="2">
+                            <div class="version-edit-input" id="version-edit-genre"></div>
+                        </td>
                     </tr>
                     <tr>
                         <th class="th-left">Label: </th>
-                        <td><?= $data['lab_nom'] ?></td>
+                        <td>
+                            <div class="version-edit-input" id="version-edit-label"></div>
+                        </td>
                         <th class="th-left">Label Ref: </th>
-                        <td><?= $data['ver_ref'] ?></td>
+                        <td>
+                            <div class="version-edit-input" id="version-edit-reference"></div>
+                        </td>
                     </tr>
                     <tr>
                         <th colspan="2" class="th-left">Format: </th>
-                        <td colspan="2"><?= $data['for_nom'] ?></td>
+                        <td colspan="2">
+                            <div class="version-edit-input" id="version-edit-format"></div>
+                        </td>
                     </tr>
                     <tr>
                         <th colspan="2" class="th-left">Pays: </th>
-                        <td colspan="2"><?= $data['ver_press_pays'] ?></td>
+                        <td colspan="2">
+                            <div class="version-edit-input" id="version-edit-pays"></div>
+                        </td>
                     </tr>
                     <tr>
                         <th colspan="2" class="th-left">Sortie: </th>
-                        <td colspan="2"><?= $data['ver_press_annee'] ?></td>
+                        <td colspan="2">
+                            <div class="version-edit-input" id="version-edit-pressage-annee"></div>
+                        </td>
                     </tr>
                     <tr>
                         <th colspan="2" class="th-left">Edition: </th>
-                        <td colspan="2"><?= $data['edi_type'] ?></td>
+                        <td colspan="2">
+                            <div class="version-edit-input" id="version-edit-type"></div>
+                        </td>
                     </tr>
                     <tr>
-                        <td colspan="4">
-                            <div class="btn btn-primary"><a href="version_edit.php?versionId=<?= $_GET['versionId'] ?>">Editer l'Album</a></div>
+                        <td colspan="4" id="edit-commandes" class="flex-row">
+                            <div class="btn btn-primary" id="edit-version-btn">Editer l'Album</div>
                         </td>
                     </tr>
                 </tbody>

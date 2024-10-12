@@ -1,148 +1,200 @@
+import { getSelect } from "./fonctions_rest.js";
+
 // MODALE CHANSON -------------------------------------------------------------------------------------------------------------------------------------------------------------------
-export function modaleChanson(nChanson = 1, idChanson = '', trackEditChanson = '', titreEditChanson = '', dureeEditChanson = '', mode = 'add') {
+/**
+ * Création de la modale pour ajout de chanson
+ *
+ * @param {number} nChanson - Le nombre de chansons de la version.
+ * @param {string} idChanson - L'ID de la chanson à modifier.
+ * @param {string} trackEditChanson - Le track de la chanson à modifier.
+ * @param {string} titreEditChanson - Le titre de la chanson à modifier.
+ * @param {string} dureeEditChanson - La durée de la chanson à modifier.
+ * @param {string} mode - Le mode de la modale ("add" ou "edit").
+ * @returns {void}
+ */
+export function modaleChanson(nChanson = 1, idChanson = "", trackEditChanson = "", titreEditChanson = "", dureeEditChanson = "", mode = "add") {
+	// Création du conteneur principal de la modale
+	const modale = document.createElement("div");
+	modale.classList.add("modale");
+	modale.id = "modale-chanson";
 
-    // Création du conteneur principal de la modale
-    const modale = document.createElement('div');
-    modale.classList.add('modale');
-    modale.id = 'modale-chanson';
+	// Bouton de fermeture de la modale
+	const closeBtn = document.createElement("div");
+	closeBtn.classList.add("close-btn");
+	closeBtn.id = "close-modale";
+	closeBtn.textContent = "X";
+	modale.appendChild(closeBtn);
 
-    // Bouton de fermeture de la modale
-    const closeBtn = document.createElement('div');
-    closeBtn.classList.add('close-btn');
-    closeBtn.id = 'close-modale';
-    closeBtn.textContent = 'X';
-    modale.appendChild(closeBtn);
+	// Bouton Action
+	const btnAction = document.createElement("div");
+	btnAction.classList.add("btn", "btn-primary");
 
-    // Bouton Action
-    const btnAction = document.createElement('div');
-    btnAction.classList.add('btn', 'btn-primary');
+	const table = document.createElement("table");
+	table.classList.add("table");
 
+	const entete = document.createElement("thead");
+	const ligneEntete = document.createElement("tr");
 
-    const table = document.createElement('table');
-    table.classList.add('table');
+	// Création des en-têtes du tableau
+	["Track Nr", "Titre de la chanson", "Durée"].forEach((label) => {
+		const champEntete = document.createElement("th");
+		const labelElement = document.createElement("label");
+		labelElement.classList.add("form-label");
+		labelElement.textContent = label;
+		champEntete.appendChild(labelElement);
+		ligneEntete.appendChild(champEntete);
+	});
 
-    const entete = document.createElement('thead');
-    const ligneEntete = document.createElement('tr');
+	entete.appendChild(ligneEntete);
+	table.appendChild(entete);
 
-    // Création des en-têtes du tableau
-    ['Track Nr', 'Titre de la chanson', 'Durée'].forEach(label => {
-        const champEntete = document.createElement('th');
-        const labelElement = document.createElement('label');
-        labelElement.classList.add('form-label');
-        labelElement.textContent = label;
-        champEntete.appendChild(labelElement);
-        ligneEntete.appendChild(champEntete);
-    });
+	// Corps du tableau (tbody)
+	const tbody = document.createElement("tbody");
+	tbody.id = "modale-liste-chanson";
+	for (let i = 0; i < nChanson; i = i + 1) {
+		let ligne = document.createElement("tr");
+		ligne.className = "newtrack";
+		ligne.id = "newtrack" + i;
+		let dataLigne = {
+			track: trackEditChanson,
+			titre: titreEditChanson,
+			duree: dureeEditChanson,
+		};
+		for (let cle in dataLigne) {
+			const tdChamp = document.createElement("td");
+			const inputChamp = document.createElement("input");
+			inputChamp.type = "text";
+			inputChamp.classList.add("form-control", cle);
+			inputChamp.id = cle + i;
+			if (i == 0) {
+				inputChamp.value = dataLigne[cle];
+			}
 
-    entete.appendChild(ligneEntete);
-    table.appendChild(entete);
+			tdChamp.appendChild(inputChamp);
+			ligne.appendChild(tdChamp);
+		}
 
-    // Corps du tableau (tbody)
-    const tbody = document.createElement('tbody');
-    tbody.id = 'modale-liste-chanson';
-    for (let i = 0; i < nChanson; i = i + 1) {
-        let ligne = document.createElement('tr')
-        ligne.className = "newtrack";
-        ligne.id = ("newtrack" + i);
-        let dataLigne = { 'track': trackEditChanson, 'titre': titreEditChanson, 'duree': dureeEditChanson };
-        for (let cle in dataLigne) {
-            const tdChamp = document.createElement('td');
-            const inputChamp = document.createElement('input');
-            inputChamp.type = 'text';
-            inputChamp.classList.add("form-control", cle);
-            inputChamp.id = cle + i;
-            if (i == 0) {
-                inputChamp.value = dataLigne[cle]
-            }
+		tbody.appendChild(ligne);
+	}
 
-            tdChamp.appendChild(inputChamp);
-            ligne.appendChild(tdChamp)
-        }
+	table.appendChild(tbody);
+	modale.appendChild(table);
 
-        tbody.appendChild(ligne);
-    }
+	if (mode != "edit") {
+		btnAction.id = "modale-add-chanson";
+		btnAction.textContent = "Créer";
+		// Section "Nombre de chansons"
+		const nombreChansons = document.createElement("div");
+		nombreChansons.id = "nombre-chansons";
 
-    table.appendChild(tbody);
-    modale.appendChild(table);
+		const labelNbrChanson = document.createElement("label");
+		labelNbrChanson.classList.add("form-label");
+		labelNbrChanson.setAttribute("for", "nChanson");
+		labelNbrChanson.textContent = "Nr de Chansons";
 
-    if (mode != 'edit') {
-        btnAction.id = 'modale-add-chanson';
-        btnAction.textContent = 'Créer';
-        // Section "Nombre de chansons"
-        const nombreChansons = document.createElement('div');
-        nombreChansons.id = 'nombre-chansons';
+		const inputNbrChanson = document.createElement("input");
+		inputNbrChanson.type = "number";
+		inputNbrChanson.classList.add("form-control", "form-control-color");
+		inputNbrChanson.id = "nChanson";
+		inputNbrChanson.value = nChanson;
 
-        const labelNbrChanson = document.createElement('label');
-        labelNbrChanson.classList.add('form-label');
-        labelNbrChanson.setAttribute('for', 'nChanson');
-        labelNbrChanson.textContent = 'Nr de Chansons';
+		nombreChansons.appendChild(labelNbrChanson);
+		nombreChansons.appendChild(inputNbrChanson);
 
-        const inputNbrChanson = document.createElement('input');
-        inputNbrChanson.type = 'number';
-        inputNbrChanson.classList.add('form-control', 'form-control-color');
-        inputNbrChanson.id = 'nChanson';
-        inputNbrChanson.value = nChanson;
+		modale.appendChild(nombreChansons);
+	} else {
+		btnAction.id = "modale-edit-chanson";
+		btnAction.textContent = "Editer";
 
-        nombreChansons.appendChild(labelNbrChanson);
-        nombreChansons.appendChild(inputNbrChanson);
+		// Input caché pour l'ID de la chanson
+		const hiddenInput = document.createElement("input");
+		hiddenInput.type = "hidden";
+		hiddenInput.id = "modale-id-chanson";
+		hiddenInput.textContent = idChanson;
+		modale.appendChild(hiddenInput);
+	}
 
-        modale.appendChild(nombreChansons);
-    } else {
-        btnAction.id = 'modale-edit-chanson';
-        btnAction.textContent = 'Editer';
+	// Ajout des éléments au conteneur principal de la modale
+	modale.appendChild(btnAction);
 
-        // Input caché pour l'ID de la chanson
-        const hiddenInput = document.createElement('input');
-        hiddenInput.type = 'hidden';
-        hiddenInput.id = 'modale-id-chanson';
-        hiddenInput.textContent = idChanson;
-        modale.appendChild(hiddenInput);
-    }
-
-
-    // Ajout des éléments au conteneur principal de la modale
-    modale.appendChild(btnAction);
-
-    // Ajout de la modale au body
-    document.body.appendChild(modale);
+	// Ajout de la modale au body
+	document.body.appendChild(modale);
 }
 
-export function modaleSuppressionChanson(idChanson = '') {
-    // Création du conteneur principal de la modale
-    const modale = document.createElement('div');
-    modale.classList.add('modale', 'modal-flex-column');
-    modale.id = 'modale-chanson';
+// Modale de suppression de chanson
+/**
+ * Création de la modale de suppression de chanson
+ *
+ * @param {string} idChanson - L'ID de la chanson à supprimer
+ * @returns {void}
+ */
+export function modaleSuppressionChanson(idChanson = "") {
+	// Création du conteneur principal de la modale
+	const modale = document.createElement("div");
+	modale.classList.add("modale", "modal-flex-column");
+	modale.id = "modale-chanson";
 
-    const texteModale = document.createElement('div');
-    texteModale.classList.add('texte-modale');
-    texteModale.textContent = 'Voulez-vous vraiment supprimer cette chanson?';
+	const texteModale = document.createElement("div");
+	texteModale.classList.add("texte-modale");
+	texteModale.textContent = "Voulez-vous vraiment supprimer cette chanson?";
 
-    const modalFlexRow = document.createElement('div');
-    modalFlexRow.classList.add('modal-flex-row');
+	const modalFlexRow = document.createElement("div");
+	modalFlexRow.classList.add("modal-flex-row");
 
-    const btnConfirmDelete = document.createElement('div');
-    btnConfirmDelete.classList.add('btn', 'btn-danger');
-    btnConfirmDelete.id = 'modale-confirm-delete-chanson';
-    btnConfirmDelete.textContent = 'Confirmer';
+	const btnConfirmDelete = document.createElement("div");
+	btnConfirmDelete.classList.add("btn", "btn-danger");
+	btnConfirmDelete.id = "modale-confirm-delete-chanson";
+	btnConfirmDelete.textContent = "Confirmer";
 
-    const btnCancelDelete = document.createElement('div');
-    btnCancelDelete.classList.add('btn', 'btn-primary');
-    btnCancelDelete.id = 'modale-confirm-cancel-chanson';
-    btnCancelDelete.textContent = 'Annuler';
+	const btnCancelDelete = document.createElement("div");
+	btnCancelDelete.classList.add("btn", "btn-primary");
+	btnCancelDelete.id = "modale-confirm-cancel-chanson";
+	btnCancelDelete.textContent = "Annuler";
 
-    modalFlexRow.appendChild(btnConfirmDelete);
-    modalFlexRow.appendChild(btnCancelDelete);
+	modalFlexRow.appendChild(btnConfirmDelete);
+	modalFlexRow.appendChild(btnCancelDelete);
 
-    modale.appendChild(texteModale);
-    modale.appendChild(modalFlexRow);
+	modale.appendChild(texteModale);
+	modale.appendChild(modalFlexRow);
 
-    // Input caché pour l'ID de la chanson
-    const hiddenInput = document.createElement('input');
-    hiddenInput.type = 'hidden';
-    hiddenInput.id = 'modale-id-chanson';
-    hiddenInput.textContent = idChanson;
-    modale.appendChild(hiddenInput);
+	// Input caché pour l'ID de la chanson
+	const hiddenInput = document.createElement("input");
+	hiddenInput.type = "hidden";
+	hiddenInput.id = "modale-id-chanson";
+	hiddenInput.textContent = idChanson;
+	modale.appendChild(hiddenInput);
 
-    // Ajout de la modale au body
-    document.body.appendChild(modale);
+	// Ajout de la modale au body
+	document.body.appendChild(modale);
+}
+
+// Selecteur dynamique
+/**
+ * Création d'un selecteur dynamique
+ *
+ * @param {string} table - Le nom de la table contenant les données
+ * @param {string} nom - Le nom de l'input
+ * @returns {Promise<Element>} Le selecteur créé
+ */
+export async function selecteur(table, nom, selectedValue = "") {
+	try {
+		let listeOptions = await getSelect(table);
+		if (listeOptions) {
+			let selecteur = document.createElement("select");
+			selecteur.classList.add("form-select");
+			selecteur.id = nom;
+			selecteur.name = nom;
+			for (const option in listeOptions) {
+				let optionElement = document.createElement("option");
+				optionElement.value = option;
+				optionElement.textContent = listeOptions[option][1];
+				if (listeOptions[option][1] == selectedValue) {
+					optionElement.selected = true;
+				}
+				selecteur.appendChild(optionElement);
+			}
+
+			return selecteur;
+		}
+	} catch (error) {}
 }

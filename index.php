@@ -56,8 +56,8 @@ if (isset($_GET['delete'])) {
                 </thead>
                 <tbody>
                     <!-- Début d'une boucle PHP qui crée une ligne de tableau par album 
-                         Les class 'hide' sont cachées en version mobile 
-                         TODO:  Combiner form-etat-pc et form-etat-mobile et affichage responsive en js -->
+                        Les class 'hide' sont cachées en version mobile 
+                        TODO:  Combiner form-etat-pc et form-etat-mobile et affichage responsive en js -->
                     <?php
                     for ($i = 0; $i < count($list); $i++) {
                     ?>
@@ -67,7 +67,7 @@ if (isset($_GET['delete'])) {
                                 <img src="<?= $list[$i]['ver_image'] ?>" alt="pochette de l'album" class="img-liste">
                             </td>
                             <td><?= $list[$i]['ver_ref'] ?></td>
-                            <td><a href="vue/version_album.php?versionId=<?= $list[$i]['ver_id'] ?>"><?= $list[$i]['alb_titre'] ?></a></td>
+                            <td><a href="vue/version_album.php?id=<?= $list[$i]['ver_id'] ?>"><?= $list[$i]['alb_titre'] ?></a></td>
                             <td><?= $list[$i]['art_nom'] ?></td>
                             <td class="hide"><?= $list[$i]['for_nom'] ?></td>
                             <td class="hide"><?= $list[$i]['gen_nom'] ?></td>
