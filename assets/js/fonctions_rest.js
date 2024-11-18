@@ -1,4 +1,12 @@
-// SELECT---------------------------------------------------------------------------------------------------------------------------------------
+// 1-SELECT
+// 2-CHANSONS
+// 3-VERSION
+// 4-LISTE UTILISATEUR
+// 5-LABEL
+// 6-ALBUM
+// 7-ARTISTE
+
+// 1-SELECT---------------------------------------------------------------------------------------------------------------------------------------
 
 /**
  * Permet de récupérer de manière asynchrone les optionss d'un select
@@ -19,7 +27,7 @@ export async function getSelect(table) {
 	}
 }
 
-// CHANSONS---------------------------------------------------------------------------------------------------------------------------------------
+// 2-CHANSONS---------------------------------------------------------------------------------------------------------------------------------------
 
 /**
  * Permet de récupérer les données d'une chanson de manière asynchrone
@@ -113,7 +121,34 @@ export async function editChanson(bodyContent) {
 	}
 }
 
-// VERSION---------------------------------------------------------------------------------------------------------------------------------------
+// 3-VERSION---------------------------------------------------------------------------------------------------------------------------------------
+
+/**
+ * Permet de récupérer de manière asynchrone les versions cherchées
+ *
+ * @param {Object} parametres
+ * @returns {Promise<Object>}
+ */
+export async function getVersions(parametres) {
+	let parametreGet = "";
+	for (let parametre in parametres) {
+		parametreGet += "&" + parametre + "=" + parametres[parametre];
+	}
+
+	let url = "../../includes/router.php?entite=listeVersion" + parametreGet;
+
+	if (parametreGet) {
+		try {
+			const response = await fetch(url, { method: "GET" });
+			const data = await response.json();
+			return data;
+		} catch (error) {
+			console.error("Erreur lors de la récupération de la version :", error);
+			throw error;
+		}
+	}
+}
+
 /**
  * Permet de récupérer de manière asynchrone les données d'une version
  *
@@ -133,13 +168,25 @@ export async function getVersion(idVersion) {
 	}
 }
 
-// export async function deleteVersion(bodyContent) {
-//     let url = "../../includes/router.php";
-// }
-
-// export async function addVersion(bodyContent) {
-//     let url = "../../includes/router.php";
-// }
+/**
+ * Permet d'ajouter de manière asynchrone une version
+ *
+ * @param {Object} formData
+ * @returns {Promise<boolean>}
+ */
+export async function addVersion(formData) {
+	let url = "../../includes/router.php?entite=version";
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			body: formData,
+		});
+		return response.ok; // Renvoie true si l'ajout' s'est bien passé
+	} catch (error) {
+		console.error("Erreur lors de l'ajout de la version :", error);
+		throw error;
+	}
+}
 
 /**
  * Permet de modifier de manière asynchrone une version
@@ -157,56 +204,103 @@ export async function editVersion(formData) {
 		});
 		return response.ok; // Renvoie true si la modification s'est bien passée
 	} catch (error) {
-		console.error("Erreur lors de la modification de la chanson :", error);
+		console.error("Erreur lors de la modification de la cersion :", error);
 		throw error;
 	}
 }
 
-// LABEL---------------------------------------------------------------------------------------------------------------------------------------
-// export async function getLabels() {
-//     let url = "../../includes/router.php?action=getLabels";
+// 4-LISTE UTILISATEUR-------------------------------------------------------------------------------------------------------------------------
 
-//     try {
-//         const response = await fetch(url, { method: 'GET' });
-//         const data = await response.json();
-//         return data;
-//     } catch (error) {
-//         console.error("Erreur lors de la récupération des labels :", error);
-//         throw error;
-//     }
-// }
+/**
+ * Permet d'ajouter de manière asynchrone une version à une liste
+ *
+ * @param {Object} bodyContent - objet contenant l'id de l'utilisateur et l'id de la version
+ * @returns {Promise<boolean>}
+ */
+export async function addVersionToList(bodyContent) {
+	let url = "../../includes/router.php?entite=liste";
 
-// ALBUM---------------------------------------------------------------------------------------------------------------------------------------
-// export async function getAlbums() {
-//     let url = "../../includes/router.php?action=getAlbums";
-// }
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			body: JSON.stringify(bodyContent),
+			headers: {
+				"Content-type": "application/json",
+			},
+		});
+		const data = await response.json();
+		return data.ajout;
+	} catch (error) {
+		console.error("Erreur lors de l'ajout de la version à la collection :", error);
+		throw error;
+	}
+}
 
-// export async function deleteAlbum(bodyContent) {
-//     let url = "../../includes/router.php";
-// }
+// 5-LABEL---------------------------------------------------------------------------------------------------------------------------------------
 
-// export async function addAlbum(bodyContent) {
-//     let url = "../../includes/router.php";
-// }
+/**
+ * Permet d'ajouter de manière asynchrone un label
+ *
+ * @param {Object} bodyContent
+ * @returns {Promise<boolean>}
+ */
+export async function addLabel(bodyContent) {
+	let url = "../../includes/router.php?entite=label";
 
-// export async function editAlbum(bodyContent) {
-//     let url = "../../includes/router.php";
-// }
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			body: JSON.stringify(bodyContent),
+		});
+		return response.ok; // Renvoie true si l'ajout' s'est bien passé
+	} catch (error) {
+		console.error("Erreur lors de l'ajout du label' :", error);
+		throw error;
+	}
+}
 
-// ARTISTE---------------------------------------------------------------------------------------------------------------------------------------
+// 6-ALBUM---------------------------------------------------------------------------------------------------------------------------------------
 
-// export async function getArtistes() {
-//     let url = "../../includes/router.php?action=getArtistes";
-// }
+/**
+ * Permet d'ajouter de manière asynchrone un album
+ *
+ * @param {Object} bodyContent
+ * @returns {Promise<boolean>}
+ */
+export async function addAlbum(bodyContent) {
+	let url = "../../includes/router.php?entite=album";
 
-// export async function deleteArtiste(bodyContent) {
-//     let url = "../../includes/router.php";
-// }
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			body: JSON.stringify(bodyContent),
+		});
+		return response.ok; // Renvoie true si l'ajout' s'est bien passé
+	} catch (error) {
+		console.error("Erreur lors de l'ajout de l'album' :", error);
+		throw error;
+	}
+}
 
-// export async function addArtiste(bodyContent) {
-//     let url = "../../includes/router.php";
-// }
+// 7-ARTISTE---------------------------------------------------------------------------------------------------------------------------------------
 
-// export async function editArtiste(bodyContent) {
-//     let url = "../../includes/router.php";
-// }
+/**
+ * Permet d'ajouter de manière asynchrone un artiste
+ *
+ * @param {Object} bodyContent
+ * @returns {Promise<boolean>}
+ */
+export async function addArtiste(bodyContent) {
+	let url = "../../includes/router.php?entite=artiste";
+
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			body: JSON.stringify(bodyContent),
+		});
+		return response.ok; // Renvoie true si l'ajout' s'est bien passé
+	} catch (error) {
+		console.error("Erreur lors de l'ajout de l'album' :", error);
+		throw error;
+	}
+}

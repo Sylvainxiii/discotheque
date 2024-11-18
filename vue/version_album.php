@@ -6,14 +6,6 @@ include_once("../includes/header.php");
 if (!isset($_SESSION['email'])) {
     header('Location: login.php');
 }
-
-// Récupère les données de la version d'album
-// TODO: passer en AJAX
-// if (isset($_GET['id'])) {
-//     $data = versionDetail($_GET['id'], $pdo);
-// }
-
-$infopage = pathinfo(__FILE__);
 ?>
 
 <body>
@@ -106,6 +98,6 @@ $infopage = pathinfo(__FILE__);
 </body>
 <script type="module" src="../assets/js/fonctions_rest.js"></script>
 <script type="module" src="../assets/js/composants.js"></script>
-<script type="module" src="../assets/js/<?= $infopage['filename'] ?>.js"></script>
+<script type="module" src="../assets/js/version_album.js"></script>
 
 </html>

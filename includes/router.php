@@ -35,13 +35,26 @@ $routes = [
             'parametres' => [
                 'id' => 'requis'
             ]
+        ],
+        'listeVersion' => [
+            'fonction' => 'getVersion',
+            'parametres' => [
+                'chercherreference' => 'optionnel',
+                'cherchertitre' => 'optionnel',
+                'chercherartiste' => 'optionnel'
+            ]
         ]
     ],
     'DELETE' => [
         'chanson' => ['fonction' => 'deleteChanson']
     ],
     'POST' => [
-        'chanson' => ['fonction' => 'addChanson']
+        'chanson' => ['fonction' => 'addChanson'],
+        'liste' => ['fonction' => 'addToList'],
+        'version' => ['fonction' => 'addVersion'],
+        'artiste' => ['fonction' => 'createArtiste'],
+        'album' => ['fonction' => 'createAlbum'],
+        'label' => ['fonction' => 'createLabel']
     ],
     'PUT' => [
         'chanson' => ['fonction' => 'editchanson'],
@@ -81,7 +94,7 @@ function valideEtGetParametres($route)
             http_response_code(400);
             echo json_encode(['error' => "Missing required parameter: $param"]);
             exit;
-        } elseif ($_GET[$param]) {
+        } elseif (!empty($_GET[$param])) {
             $parametre[$param] = $_GET[$param];
         }
     }

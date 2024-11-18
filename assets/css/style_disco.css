@@ -145,10 +145,10 @@ thead {
 
 th {
     font-size: var(--th-font-size);
+    padding: var(--th-td-padding);
 }
 
 .th-center {
-    padding: var(--th-td-padding);
     text-align: center;
 }
 
@@ -163,7 +163,7 @@ th {
 
 td {
     padding: var(--th-td-padding);
-    text-align: center;
+    text-align: left;
     font-size: var(--td-font-size);
 }
 
@@ -255,7 +255,6 @@ fieldset {
 
 .form-label {
     display: inline-block;
-    margin-bottom: var(--label-margin-bottom);
     font-size: var(--form-font-size);
     color: var(--bright-font-color);
     background: var(--thead-background-color);
@@ -282,7 +281,7 @@ fieldset {
 .form-control-line {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: stretch;
     width: 100%;
 }
@@ -407,6 +406,7 @@ fieldset {
     font-size: 20px;
     font-weight: 600;
     line-height: 1;
+    cursor: pointer;
 }
 
 /* navbar ---------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -577,6 +577,18 @@ img {
     background-color: rgba(55, 55, 55, 0.9);
     border-radius: 10px;
     overflow: hidden;
+    padding: 2em 1em 1em 1em;
+
+    h1{
+        color: #FFFFFF;
+    }
+
+    .champ-container{
+        display: flex;
+        gap: 1em;
+        width: 100%;
+        margin-bottom: var(--label-margin-bottom);
+    }
 }
 
 .modal-flex-column {
