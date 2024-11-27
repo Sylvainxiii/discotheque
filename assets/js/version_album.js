@@ -1,5 +1,5 @@
 import { getChansons, deleteChanson, addChanson, editChanson, editVersion, getVersion } from "./fonctions_rest.js";
-import { modaleChanson, modaleSuppressionChanson, selecteur } from "./composants.js";
+import { modaleChanson, modaleSuppression, selecteur } from "./composants.js";
 
 // Récupération de divers éléments du DOM dans des variables
 let idVersion = document.getElementById("idVersion").value;
@@ -46,20 +46,12 @@ listeChansons.addEventListener("click", function (event) {
 	// ouvre la modale pour supprimer une chanson
 	if (el.classList.contains("delete-chanson-btn")) {
 		let idChanson = el.parentNode.parentNode.id;
-		modaleSuppressionChanson(idChanson);
+		modaleSuppression(idChanson);
 	}
 });
 
 // Action des boutons créés dynamiquement
 document.addEventListener("click", function (event) {
-	//fermeture de la modale
-	if (event.target.id == "close-modale" || event.target.id == "modale-confirm-cancel-chanson") {
-		const modale = event.target.closest(".modale");
-		if (modale) {
-			modale.remove();
-		}
-	}
-
 	//Confirmation de l'ajout de chansons
 	if (event.target.id == "modale-add-chanson") {
 		const modale = event.target.closest(".modale");
@@ -78,7 +70,7 @@ document.addEventListener("click", function (event) {
 	}
 
 	//Confirmation de la suppression de la chanson
-	if (event.target.id == "modale-confirm-delete-chanson") {
+	if (event.target.id == "modale-confirm-supression") {
 		const modale = event.target.closest(".modale");
 		if (modale) {
 			supprimerChanson(modale);
@@ -429,7 +421,7 @@ async function afficherChansons(idVersion) {
  * @returns {void}
  */
 async function supprimerChanson(modale) {
-	let idDeleteChanson = document.getElementById("modale-id-chanson").textContent;
+	let idDeleteChanson = document.getElementById("modale-id").textContent;
 	let bodyContent = {
 		idChanson: idDeleteChanson,
 	};
@@ -440,7 +432,6 @@ async function supprimerChanson(modale) {
 			let ligne = document.getElementById(idDeleteChanson);
 			ligne.remove();
 			modale.remove();
-			alert("Suppression réussie.");
 		} else {
 			alert("La suppression de la chanson a échoué.");
 		}

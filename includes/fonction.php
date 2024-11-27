@@ -146,10 +146,15 @@ function addImage64($pdo)
 
 // 3-FUNCTION LISTE UTILISATEUR ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// Fonctions pour l'affichage de la collection de l'utilisateur
-function getListe($email, $pdo)
+/**
+ * Récupère la liste des albums de l'utilisateur
+ * 
+ * @param array $parametres (id de l'utilisateur)
+ * @param PDO $pdo
+ */
+function getListe($parametres, $pdo)
 {
-    $sql = "SELECT lis_id, ver_id,  uti_email, alb_titre, ver_ref, gen_nom, for_nom, art_nom, lis_fk_media_eta_id, lis_fk_pochette_eta_id, ver_image FROM d_utilisateur_uti
+    $sql = "SELECT lis_id, ver_id, alb_titre, ver_ref, gen_nom, for_nom, art_nom, lis_fk_media_eta_id, lis_fk_pochette_eta_id, ver_image FROM d_utilisateur_uti
     INNER JOIN d_liste_lis ON uti_id = lis_fk_uti_id 
     INNER JOIN d_version_ver ON lis_fk_ver_id = ver_id 
     INNER JOIN d_album_alb ON ver_fk_alb_id = alb_id 
@@ -157,11 +162,13 @@ function getListe($email, $pdo)
     INNER JOIN d_artiste_art  ON jaa_fk_art_id = art_id 
     INNER JOIN d_genre_gen  ON alb_fk_gen_id = gen_id
     INNER JOIN d_format_for  ON ver_fk_for_id = for_id
-    WHERE uti_email = :email";
+    WHERE uti_id = :userid";
     $stmt = $pdo->prepare($sql);
-    $params = ["email" => $email];
+    $params = ["userid" => $parametres["id"]];
     $stmt->execute($params);
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    header("Content-Type: application/json");
+    echo json_encode($result, JSON_PRETTY_PRINT);
     return $result;
 }
 
@@ -179,29 +186,43 @@ function addToList($pdo)
     $stmt = $pdo->prepare($sql);
     $params = ["utilisateurid" => $data["user"], "versionid" => $data["version"]];
     $stmt->execute($params);
-
+    header("Content-Type: application/json");
     echo json_encode(["ajout" => true], JSON_PRETTY_PRINT);
     return;
 }
 
-// Edition de l'état de l'exemplaire d'un album dans la collection de l'utilisateur
-function editetat($pdo)
+/**
+ * Edition de l'état de l'exemplaire d'un album dans la collection de l'utilisateur
+ * 
+ * @param PDO $pdo
+ * @return void
+ */
+function editEtat($pdo)
 {
-    $sql = "UPDATE d_liste_lis SET lis_fk_media_eta_id = :etatMedia, lis_fk_pochette_eta_id = :etatPochette
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    $colonneAEditer = $data["type"] === "media" ? "lis_fk_media_eta_id" : "lis_fk_pochette_eta_id";
+
+    $sql = "UPDATE d_liste_lis SET $colonneAEditer = :valeurEtat
     WHERE lis_id = :listeId";
     $stmt = $pdo->prepare($sql);
-    $params = ["listeId" => $_GET["listeId"], "etatMedia" => $_GET["etatMedia"], "etatPochette" => $_GET["etatPochette"]];
+    $params = ["listeId" => $data["id"], "valeurEtat" => $data["etat"]];
     $stmt->execute($params);
+    header("Content-Type: application/json");
+    echo json_encode(["modification" => true], JSON_PRETTY_PRINT);
     return;
 }
 
 // Suppression d'une ligne de la collection de l'Utilisateur
-function supListe($listeId, $pdo)
+function deleteListe($pdo)
 {
+    $data = json_decode(file_get_contents("php://input"), true);
+
     $sql = "DELETE FROM d_liste_lis WHERE 	lis_id = :listeId";
     $stmt = $pdo->prepare($sql);
-    $params = ["listeId" => $listeId];
+    $params = ["listeId" => $data["id"]];
     $stmt->execute($params);
+    echo json_encode(["id" => $data["id"]], JSON_PRETTY_PRINT);
     return;
 }
 
@@ -231,6 +252,7 @@ function versionDetail($parametres, $pdo)
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     header("Content-Type: application/json");
     echo json_encode($result, JSON_PRETTY_PRINT);
+    return;
 }
 
 /**
@@ -422,16 +444,6 @@ function editVersion($pdo)
     echo json_encode(["id" => $data["versionId"]], JSON_PRETTY_PRINT);
     return;
 }
-
-// Suppression d'une version d'un album existante
-// function supVersion($versionid, $pdo)
-// {
-//     $sql = "DELETE FROM d_version_ver WHERE ver_id = :versionid";
-//     $stmt = $pdo->prepare($sql);
-//     $params = ["versionId" => $versionid];
-//     $stmt->execute($params);
-//     return;
-// }
 
 // 5-FUNCTION CHANSON ---------------------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -24,6 +24,9 @@ export function modaleChanson(nChanson = 1, idChanson = "", trackEditChanson = "
 	closeBtn.id = "close-modale";
 	closeBtn.textContent = "X";
 	modale.appendChild(closeBtn);
+	closeBtn.addEventListener("click", () => {
+		document.body.removeChild(modale);
+	});
 
 	// Bouton Action
 	const btnAction = document.createElement("div");
@@ -128,31 +131,34 @@ export function modaleChanson(nChanson = 1, idChanson = "", trackEditChanson = "
  * @param {string} idChanson - L'ID de la chanson à supprimer
  * @returns {void}
  */
-export function modaleSuppressionChanson(idChanson = "") {
+export function modaleSuppression(id = "") {
 	// Création du conteneur principal de la modale
 	const modale = document.createElement("div");
 	modale.classList.add("modale", "modal-flex-column");
-	modale.id = "modale-chanson";
+	modale.id = "modale-suppression";
 
 	const texteModale = document.createElement("div");
 	texteModale.classList.add("texte-modale");
-	texteModale.textContent = "Voulez-vous vraiment supprimer cette chanson?";
+	texteModale.textContent = "Voulez-vous vraiment supprimer cette ligne?";
 
 	const modalFlexRow = document.createElement("div");
 	modalFlexRow.classList.add("modal-flex-row");
 
 	const btnConfirmDelete = document.createElement("div");
 	btnConfirmDelete.classList.add("btn", "btn-danger");
-	btnConfirmDelete.id = "modale-confirm-delete-chanson";
+	btnConfirmDelete.id = "modale-confirm-supression";
 	btnConfirmDelete.textContent = "Confirmer";
+	modalFlexRow.appendChild(btnConfirmDelete);
 
 	const btnCancelDelete = document.createElement("div");
 	btnCancelDelete.classList.add("btn", "btn-primary");
-	btnCancelDelete.id = "modale-confirm-cancel-chanson";
+	btnCancelDelete.id = "modale-cancel-suppression";
 	btnCancelDelete.textContent = "Annuler";
-
-	modalFlexRow.appendChild(btnConfirmDelete);
 	modalFlexRow.appendChild(btnCancelDelete);
+
+	btnCancelDelete.addEventListener("click", () => {
+		document.body.removeChild(modale);
+	});
 
 	modale.appendChild(texteModale);
 	modale.appendChild(modalFlexRow);
@@ -160,8 +166,8 @@ export function modaleSuppressionChanson(idChanson = "") {
 	// Input caché pour l'ID de la chanson
 	const hiddenInput = document.createElement("input");
 	hiddenInput.type = "hidden";
-	hiddenInput.id = "modale-id-chanson";
-	hiddenInput.textContent = idChanson;
+	hiddenInput.id = "modale-id";
+	hiddenInput.textContent = id;
 	modale.appendChild(hiddenInput);
 
 	// Ajout de la modale au body

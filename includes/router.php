@@ -43,10 +43,17 @@ $routes = [
                 'cherchertitre' => 'optionnel',
                 'chercherartiste' => 'optionnel'
             ]
+        ],
+        'liste' => [
+            'fonction' => 'getListe',
+            'parametres' => [
+                'id' => 'requis'
+            ]
         ]
     ],
     'DELETE' => [
-        'chanson' => ['fonction' => 'deleteChanson']
+        'chanson' => ['fonction' => 'deleteChanson'],
+        'liste' => ['fonction' => 'deleteListe'],
     ],
     'POST' => [
         'chanson' => ['fonction' => 'addChanson'],
@@ -58,7 +65,8 @@ $routes = [
     ],
     'PUT' => [
         'chanson' => ['fonction' => 'editchanson'],
-        'version' => ['fonction' => 'editVersion']
+        'version' => ['fonction' => 'editVersion'],
+        'liste' => ['fonction' => 'editEtat']
     ]
 ];
 

@@ -212,6 +212,56 @@ export async function editVersion(formData) {
 // 4-LISTE UTILISATEUR-------------------------------------------------------------------------------------------------------------------------
 
 /**
+ * Permet de récupérer de manière asynchrone les listes cherchées
+ *
+ * @param {Object} parametres (id de l'utilisateur)
+ * @returns {Promise<Object>}
+ */
+export async function getList(parametres) {
+	let parametreGet = "";
+	for (let parametre in parametres) {
+		parametreGet += "&" + parametre + "=" + parametres[parametre];
+	}
+
+	let url = "../../includes/router.php?entite=liste" + parametreGet;
+
+	if (parametreGet) {
+		try {
+			const response = await fetch(url, { method: "GET" });
+			const data = await response.json();
+			return data;
+		} catch (error) {
+			console.error("Erreur lors de la récupération de la version :", error);
+			throw error;
+		}
+	}
+}
+
+/**
+ * Permet d'éditer de manière asynchrone l'état d'une pochette ou d'un media
+ *
+ * @param {Object} bodyContent (id de l'album dans la collection, type de l'état, etat)
+ * @returns {Promise<boolean>}
+ */
+export async function editEtat(bodyContent) {
+	let url = "../../includes/router.php?entite=liste";
+
+	try {
+		const response = await fetch(url, {
+			method: "PUT",
+			body: JSON.stringify(bodyContent),
+			headers: {
+				"Content-type": "application/json",
+			},
+		});
+		return response.ok; // Renvoie true si la modification s'est bien passée
+	} catch (error) {
+		console.error("Erreur lors de la modification de la chanson :", error);
+		throw error;
+	}
+}
+
+/**
  * Permet d'ajouter de manière asynchrone une version à une liste
  *
  * @param {Object} bodyContent - objet contenant l'id de l'utilisateur et l'id de la version
@@ -232,6 +282,24 @@ export async function addVersionToList(bodyContent) {
 		return data.ajout;
 	} catch (error) {
 		console.error("Erreur lors de l'ajout de la version à la collection :", error);
+		throw error;
+	}
+}
+
+export async function deleteToList(bodyContent) {
+	let url = "../../includes/router.php?entite=liste";
+
+	try {
+		const response = await fetch(url, {
+			method: "DELETE",
+			body: JSON.stringify(bodyContent),
+			headers: {
+				"Content-type": "application/json",
+			},
+		});
+		return response.ok; // Renvoie true si la suppression s'est bien passée
+	} catch (error) {
+		console.error("Erreur lors de la suppression de l'item de la liste :", error);
 		throw error;
 	}
 }
