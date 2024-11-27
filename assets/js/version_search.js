@@ -297,7 +297,6 @@ async function ajouterArtiste() {
 
 	try {
 		let id = await addArtiste(bodyContent);
-		debugger;
 		if (id) {
 			const newSelectArtiste = await selecteur("d_artiste_art", "titre-add-artiste");
 			selectArtiste.replaceWith(newSelectArtiste);

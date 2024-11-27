@@ -4,35 +4,40 @@
     box-sizing: border-box;
 }
 
+@font-face {
+    font-family: "Montserrat";
+    src: url('../fonts/Montserrat.ttf');
+}
+
 /* définition des variables ---------------------------------------------------------------------------------------------------------------------*/
 :root {
-    --main-font-color: #212529;
+    --main-font-color: #fff;
     --bright-font-color: #fff;
-    --main-font-family: "Noto Sans Symbols", sans-serif;
+    --main-font-family: "Montserrat", sans-serif;
     --main-font-size: 16px;
-    --main-font-weight: 400;
+    --main-font-weight: 600;
     --main-padding: 1px;
     --background-color: #fff;
 
-    --h1-font-family: "Roboto", sans-serif;
-    --h1-font-size: calc(1.375em + 1.5vw);
+    --h1-font-family: "Montserrat", sans-serif;
+    --h1-font-size: 2.3em;
     --h1-font-weight: 600;
-    --h1-margin-bottom: 10px;
+    --h1-margin-bottom: 1em;
 
     --a-font-color: rgba(110, 168, 254, 1);
     --a-hover-font-color: rgb(139, 185, 254);
 
     --thead-background-color: linear-gradient(to bottom, #1C6EA4 50%, #00CFC5 100%);
-    --th-td-padding: 5px;
-    --th-font-size: calc(0.4em + 0.6vw);
-    --td-font-size: calc(0.4em + 0.6vw);
-    --td-form-font-size: calc(0.4em + 0.4vw);
+    --th-td-padding: 1em;
+    --th-font-size: 0.8em;
+    --td-font-size: 0.8em;
+    --td-form-font-size: 0.8em;
     --td-label-width: calc(40px + 3vw);
 
 
     --select-border-radius: 0.25em;
 
-    --container-width: 90%;
+    --container-width: 95%;
     --container-side-padding: calc(1.5em * 0.5);
 
     --text-center-margin-top: 10px;
@@ -45,8 +50,8 @@
     --form-border-radius: 0.375em;
     --form-border: 1px solid #dee2e6;
     --form-margin-bottom: 10px;
-    --form-line-height: 2em;
-    --form-font-size: calc(0.4em + 0.6vw);
+    --form-line-height: 1.8em;
+    --form-font-size: 1em;
 
     --fieldset-border: 0;
 
@@ -56,7 +61,7 @@
     --select-bg: rgba(255, 255, 255, 0.2);
 
     --btn-font-size: 0.7em;
-    --btn-media-font-size: calc(0.4em + 0.6vw);
+    --btn-media-font-size: 0.5em;
 
 }
 
@@ -104,12 +109,18 @@ body {
     color: var(--main-font-color);
     background-color: var(--background-color);
     font-family: var(--main-font-family);
+    background-image: url("../images/20241121_160133.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
 }
 
 h1 {
     font-family: var(--h1-font-family);
     font-size: var(--h1-font-size);
     font-weight: var(--h1-font-weight);
+    margin-top: var(--h1-margin-bottom);
     margin-bottom: var(--h1-margin-bottom);
     color: inherit;
 }
@@ -136,6 +147,7 @@ table {
     width: 100%;
     caption-side: bottom;
     border-collapse: collapse;
+    margin-top: 1em;
 }
 
 thead {
@@ -155,16 +167,21 @@ th {
 .th-left {
     padding: var(--th-td-padding);
     text-align: left;
+    /* width: 2em; */
 }
 
 .th-row {
-    width: 10%;
+    width: 2em;
 }
 
 td {
     padding: var(--th-td-padding);
-    text-align: left;
+    text-align: center;
     font-size: var(--td-font-size);
+}
+
+.td-left {
+    text-align: left;
 }
 
 
@@ -177,31 +194,22 @@ td {
 }
 
 .select-etat label,
-.select-etat select,
-.select-etat-mobile label,
-.select-etat-mobile select {
+.select-etat select {
     font-size: var(--td-form-font-size);
-    width: var(--td-label-width);
+    width: 50%;
     padding: var(--form-padding);
     margin: 0;
 }
 
 .etat-td {
-    width: 10%;
-}
-
-.form-etat-mobile {
-    display: none;
-    border-bottom: var(--form-border);
-}
-
-.select-etat-mobile {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-end;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+    gap: 0.8em;
+    padding: 0.8em;
+    height: 7em;
 }
-
 
 /* menu select --------------------------------------------------------------------------------------------------------------------------------------- */
 select {
@@ -211,13 +219,6 @@ select {
     border-radius: var(--form-border-radius);
     padding: var(--form-padding);
     line-height: var(--form-line-height);
-    margin-bottom: var(--form-margin-bottom);
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-
-    background: var(--arrow-icon) no-repeat right 0.8em center / 0.8em;
 }
 
 select:focus {
@@ -369,7 +370,7 @@ fieldset {
     box-shadow: var(--bs-btn-shadow);
     height: 30px;
     width: fit-content;
-    margin-top: 0;
+    margin: 0.5em 0 0.5em 0;
     text-wrap: nowrap;
     justify-content: center;
 
@@ -395,15 +396,14 @@ fieldset {
 
 .btn-td {
     width: 5%;
-    text-align: center;
 }
 
 .close-btn {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 0.25em;
+    right: 0.25em;
     color: red;
-    font-size: 20px;
+    font-size: 1.5em;
     font-weight: 600;
     line-height: 1;
     cursor: pointer;
@@ -417,7 +417,7 @@ fieldset {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    height: fit-content;
+    height: 4em;
 }
 
 .main-pages-pc-droite {
@@ -535,6 +535,7 @@ fieldset {
 /* images -----------------------------------------------------------------------------------------------------------------------------------------------------------*/
 img {
     vertical-align: middle;
+    border: solid 0.2em var(--label-background-color);
 }
 
 .img-avatar {
@@ -554,17 +555,16 @@ img {
 .img-liste {
     width: 60px;
     height: 60px;
-    padding: 0;
+    margin: 0.2em;
     border-radius: 5px;
 }
 
 .img-detail {
-    margin-top: 20px;
-    margin-right: 50px;
-    width: 300px;
-    height: 300px;
+    margin: 1em 2em 1em 0;
+    width: 30em;
+    height: 30em;
     padding: 0;
-    border-radius: 5px;
+    border-radius: 0.5em;
 }
 
 /* images -----------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -577,24 +577,64 @@ img {
     background-color: rgba(55, 55, 55, 0.9);
     border-radius: 10px;
     overflow: hidden;
-    padding: 2em 1em 1em 1em;
+    
 
     h1{
         color: #FFFFFF;
+        text-align: center;
     }
 
+    table{
+        margin-top: 0;
+    }
+
+    .btn{
+        margin-left: 1em;
+    }
+
+    #nombre-chansons{
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        gap: 0.5em;
+        margin: 0 1em 0 1em ;
+    }
+
+    
     .champ-container{
         display: flex;
+        align-items: center;
         gap: 1em;
         width: 100%;
         margin-bottom: var(--label-margin-bottom);
+        
+        .form-label{
+            flex:1;
+        }
+        
+        input, select{
+            flex:2;
+        }
     }
+}
+
+.modal-flex-row{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal-flex-column {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 1em 0 1em 0;
+    gap: 1em;
+}
+
+.form-container {
+    margin: 1em;
 }
 
 .texte-modale {
@@ -607,11 +647,9 @@ img {
 
 /* responsive design -------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-
-
 @media screen and (max-width: 992px) {
-    main {
-        font-size: calc(0.8em + 1vw);
+    body {
+        font-size: calc(var(--main-font-size) - 8px);
 
     }
 
@@ -647,15 +685,4 @@ img {
     .navbar-mobile {
         display: block;
     }
-
-    .form-etat-mobile {
-        display: table-row;
-    }
-
-    .form-etat-pc {
-        display: none;
-    }
-
-
-
 }

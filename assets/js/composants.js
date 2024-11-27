@@ -93,7 +93,7 @@ export function modaleChanson(nChanson = 1, idChanson = "", trackEditChanson = "
 		const labelNbrChanson = document.createElement("label");
 		labelNbrChanson.classList.add("form-label");
 		labelNbrChanson.setAttribute("for", "nChanson");
-		labelNbrChanson.textContent = "Nr de Chansons";
+		labelNbrChanson.textContent = " + de Chansons?";
 
 		const inputNbrChanson = document.createElement("input");
 		inputNbrChanson.type = "number";

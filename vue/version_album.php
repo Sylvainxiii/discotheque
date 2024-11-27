@@ -25,47 +25,47 @@ if (!isset($_SESSION['email'])) {
                 <tbody>
                     <tr>
                         <th colspan="2" class="th-left">Année: </th>
-                        <td colspan="2">
+                        <td colspan="2" class="td-left">
                             <div id="version-edit-sortie-annee"></div>
                         </td>
                     </tr>
                     <tr>
                         <th colspan="2" class="th-left">Genre: </th>
-                        <td colspan="2">
+                        <td colspan="2" class="td-left">
                             <div class="version-edit-input" id="version-edit-genre"></div>
                         </td>
                     </tr>
                     <tr>
                         <th class="th-left">Label: </th>
-                        <td>
+                        <td class="td-left">
                             <div class="version-edit-input" id="version-edit-label"></div>
                         </td>
                         <th class="th-left">Label Ref: </th>
-                        <td>
+                        <td class="td-left">
                             <div class="version-edit-input" id="version-edit-reference"></div>
                         </td>
                     </tr>
                     <tr>
                         <th colspan="2" class="th-left">Format: </th>
-                        <td colspan="2">
+                        <td colspan="2" class="td-left">
                             <div class="version-edit-input" id="version-edit-format"></div>
                         </td>
                     </tr>
                     <tr>
                         <th colspan="2" class="th-left">Pays: </th>
-                        <td colspan="2">
+                        <td colspan="2" class="td-left">
                             <div class="version-edit-input" id="version-edit-pays"></div>
                         </td>
                     </tr>
                     <tr>
                         <th colspan="2" class="th-left">Sortie: </th>
-                        <td colspan="2">
+                        <td colspan="2" class="td-left">
                             <div class="version-edit-input" id="version-edit-pressage-annee"></div>
                         </td>
                     </tr>
                     <tr>
                         <th colspan="2" class="th-left">Edition: </th>
-                        <td colspan="2">
+                        <td colspan="2" class="td-left">
                             <div class="version-edit-input" id="version-edit-type"></div>
                         </td>
                     </tr>
@@ -80,11 +80,11 @@ if (!isset($_SESSION['email'])) {
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col" class="th-left">Track</th>
-                    <th scope="col" class="th-left">Titre</th>
-                    <th scope="col" class="th-left">Durée</th>
-                    <th scope="col" class="th-left"></th>
-                    <th scope="col" class="th-left"></th>
+                    <th scope="col" class="th-center">Track</th>
+                    <th scope="col" class="th-center">Titre</th>
+                    <th scope="col" class="th-center">Durée</th>
+                    <th scope="col" class="th-center"></th>
+                    <th scope="col" class="th-center"></th>
                 </tr>
             </thead>
             <tbody id="liste-chansons">

@@ -220,7 +220,6 @@ async function afficheDetailVersion(idVersion) {
 		const details = await getVersion(idVersion);
 
 		if (details) {
-			console.log(details);
 			document.querySelector("h1").textContent = details["alb_titre"] + " par " + details["art_nom"];
 			document.querySelector("#version-edit-sortie-annee").textContent = details["alb_sortie_annee"];
 			document.querySelector("#version-edit-genre").textContent = details["gen_nom"];
@@ -272,12 +271,13 @@ async function activeEditVersionForm(ligneCommandes) {
 			try {
 				const inputSelecteur = await selecteur(table, nom);
 				element.parentNode.replaceChild(inputSelecteur, element);
+				// inputSelecteur.parentElement.previousElementSibling.classList.add("form-label");
 			} catch (error) {}
 		} else if (type === "image") {
 			const input = document.createElement("input");
 			// const contenu = dataVersion[champs];
 			input.type = "file";
-			input.className = "version-edit-input";
+			input.classList.add("version-edit-input", "form-control");
 			input.id = element.id;
 			// input.src = contenu;
 			element.parentNode.replaceChild(input, element);
@@ -285,7 +285,7 @@ async function activeEditVersionForm(ligneCommandes) {
 			const input = document.createElement("input");
 			// const contenu = dataVersion[champs];
 			input.type = "text";
-			input.className = "version-edit-input";
+			input.classList.add("version-edit-input", "form-control");
 			input.id = element.id;
 			// input.value = contenu;
 			element.parentNode.replaceChild(input, element);
@@ -539,7 +539,7 @@ function creationLigneChanson(id, colonneTable) {
 
 	// Ajout du numéro de piste
 	let ligneTrack = document.createElement("th");
-	ligneTrack.className = "track";
+	ligneTrack.classList.add("track", "th-row");
 	ligneTrack.setAttribute("scope", "row");
 	ligneTrack.innerHTML = colonneTable["track"];
 	ligne.appendChild(ligneTrack);
