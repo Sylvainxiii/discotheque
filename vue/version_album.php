@@ -2,10 +2,6 @@
 // Fichier header.php contenant les inclusion de function  et initialisation de la page
 include_once("../includes/header.php");
 
-// Vérification si l'utilisateur est connecté en utilisant la variable $_SESSION
-if (!isset($_SESSION['email'])) {
-    header('Location: login.php');
-}
 ?>
 
 <body>
