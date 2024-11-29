@@ -234,6 +234,10 @@ select:focus {
     padding-left: var(--container-side-padding);
 }
 
+.container-etroit{
+    width: 40%;
+}
+
 .text-center {
     margin-top: var(--text-center-margin-top);
     display: flex;
@@ -601,23 +605,23 @@ img {
         margin: 0 1em 0 1em ;
     }
 
-    
-    .champ-container{
-        display: flex;
-        align-items: center;
-        gap: 1em;
-        width: 100%;
-        margin-bottom: var(--label-margin-bottom);
-        
-        .form-label{
-            flex:1;
-        }
-        
-        input, select{
-            flex:2;
-        }
-    }
-}
+ }   
+ 
+ .champ-container{
+     display: flex;
+     align-items: center;
+     gap: 1em;
+     width: 100%;
+     margin-bottom: var(--label-margin-bottom);
+     
+     .form-label{
+         flex:1;
+     }
+     
+     input, select{
+         flex:2;
+     }
+ }
 
 .modal-flex-row{
     display: flex;

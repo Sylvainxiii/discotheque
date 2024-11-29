@@ -10,7 +10,7 @@ include_once("../includes/header.php");
     include_once("../includes/navbar.php")
     ?>
 
-    <div class="container">
+    <div class="container container-etroit">
         <h1><?= $user['uti_prenom'] ?> <?= $user['uti_nom'] ?></h1>
         <div class="text-center">
             <img src="data:image/jpeg;base64,<?= $user['uti_avatar'] ?>" alt="photo de profil" class="img-profil">

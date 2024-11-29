@@ -9,23 +9,99 @@ const tableListe = document.getElementById("table-liste");
 // GESTION DES EVENEMENTS DU DOM------------------------------------------------------------------------------------------------------------------------------
 
 // Recherche les versions en fonction des champs de recherche
-document.addEventListener("change", function (event) {
+document.addEventListener("keyup", function (event) {
 	const el = event.target;
-	if (el.id == "chercher-reference" || el.id == "chercher-titre" || el.id == "chercher-artiste") {
-		const parametres = Object.entries({
-			chercherreference: chercherReference.value,
-			cherchertitre: chercherTitre.value,
-			chercherartiste: chercherArtiste.value,
-		})
-			.filter(([key, value]) => value.trim() !== "") // Permet de filtrer les valeurs vides dans un tableau de tableaux
-			.reduce((acc, [key, value]) => {
-				// Permet de transformer le tableau de tableaux en un objet
-				acc[key] = value;
-				return acc;
-			}, {});
+	const allowedKeys = [
+		"Backspace",
+		"Delete",
+		"Space",
+		"a",
+		"b",
+		"c",
+		"d",
+		"e",
+		"f",
+		"g",
+		"h",
+		"i",
+		"j",
+		"k",
+		"l",
+		"m",
+		"n",
+		"o",
+		"p",
+		"q",
+		"r",
+		"s",
+		"t",
+		"u",
+		"v",
+		"w",
+		"x",
+		"y",
+		"z",
+		"A",
+		"B",
+		"C",
+		"D",
+		"E",
+		"F",
+		"G",
+		"H",
+		"I",
+		"J",
+		"K",
+		"L",
+		"M",
+		"N",
+		"O",
+		"P",
+		"Q",
+		"R",
+		"S",
+		"T",
+		"U",
+		"V",
+		"W",
+		"X",
+		"Y",
+		"Z",
+		"0",
+		"1",
+		"2",
+		"3",
+		"4",
+		"5",
+		"6",
+		"7",
+		"8",
+		"9",
+		" ",
+		"/",
+		"-",
+		"_",
+	];
 
-		tableListe.innerHTML = "";
-		afficherRechercheVersions(parametres);
+	// Vérifier si le contenu respecte la regex
+
+	if (allowedKeys.includes(event.key)) {
+		if (el.id == "chercher-reference" || el.id == "chercher-titre" || el.id == "chercher-artiste") {
+			const parametres = Object.entries({
+				chercherreference: chercherReference.value,
+				cherchertitre: chercherTitre.value,
+				chercherartiste: chercherArtiste.value,
+			})
+				.filter(([key, value]) => value.trim() !== "") // Permet de filtrer les valeurs vides dans un tableau de tableaux
+				.reduce((acc, [key, value]) => {
+					// Permet de transformer le tableau de tableaux en un objet
+					acc[key] = value;
+					return acc;
+				}, {});
+
+			tableListe.innerHTML = "";
+			afficherRechercheVersions(parametres);
+		}
 	}
 });
 

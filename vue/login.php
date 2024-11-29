@@ -16,19 +16,20 @@ if (count($_POST) > 0) {
 ?>
 
     <body>
-        <div class="container">
+        <div class="container container-etroit">
             <h1>Login</h1>
 
             <form action="login.php" method="post">
-                <div class="mb-3">
+                <div class="champ-container">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelp">
+                    <input type="email" name="email" id="email" aria-describedby="emailHelp">
                 </div>
-                <div class="mb-3">
+                <div class="champ-container">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" name="password" id="password">
+                    <input type="password" name="password" id="password">
                 </div>
                 <button type="submit" class="btn btn-primary">Soumettre</button>
+                <div class="btn btn-primary"><a href="utilisateur_add.php">Créer un compte</a></div>
             </form>
         </div>
     </body>

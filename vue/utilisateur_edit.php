@@ -21,8 +21,8 @@ if (isset($_POST['utilisateurPrenom'])) {
     // Inclusion de la navbar
     include_once("../includes/navbar.php");
     ?>
-    <div class="container">
-        <h1>Mes Informations Personnelles</h1>
+    <div class="container container-etroit">
+        <h1>Mes Informations</h1>
 
         <form enctype="multipart/form-data" action="utilisateur_edit.php" method="post">
             <fieldset>

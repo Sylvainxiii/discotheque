@@ -6,9 +6,6 @@ include_once("../includes/header.php");
 
 <body>
     <?php
-    // Inclusion de la navbar
-    // TODO: vérifier si utile sur cette page
-    include_once("../includes/navbar.php");
 
     // je vérifie que email et password ne soient pas vide
     // je vérifie que l'utilisateur n'existe pas déjà, pas sur que ça fonctionne
@@ -21,19 +18,20 @@ include_once("../includes/header.php");
     }
     ?>
 
-    <div class="container">
+    <div class="container container-etroit">
         <h1>Création d'un Compte</h1>
 
         <form action="utilisateur_add.php" method="post">
-            <div class="mb-3">
+            <div class="champ-container">
                 <label for="email" class="form-label">Email</label>
-                <input required type="email" class="form-control" name="email" id="email" aria-describedby="emailHelp">
+                <input required type="email" name="email" id="email" aria-describedby="emailHelp">
             </div>
-            <div class="mb-3">
+            <div class="champ-container">
                 <label for="password" class="form-label">Password</label>
-                <input required type="password" class="form-control" name="password" id="password">
+                <input required type="password" name="password" id="password">
             </div>
             <button type="submit" class="btn btn-primary">Créer le compte</button>
+            <div class="btn btn-primary"><a href="login.php">Se Connecter</a></div>
         </form>
     </div>
 </body>

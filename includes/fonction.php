@@ -222,6 +222,7 @@ function deleteListe($pdo)
     $stmt = $pdo->prepare($sql);
     $params = ["listeId" => $data["id"]];
     $stmt->execute($params);
+    header("Content-Type: application/json");
     echo json_encode(["id" => $data["id"]], JSON_PRETTY_PRINT);
     return;
 }
